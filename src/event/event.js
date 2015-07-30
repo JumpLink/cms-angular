@@ -37,7 +37,7 @@ angular.module('jumplink.cms.event', [
 
     var setModals = function($scope) {
 
-      editModal = $modal({title: 'Ereignis bearbeiten', templateUrl: 'events/editeventmodal', show: false});
+      editModal = $modal({title: 'Ereignis bearbeiten', templateUrl: '/views/modern/events/editmodal.jade', show: false});
       editModal.$scope.ok = false;
       editModal.$scope.accept = function (hide) {
         editModal.$scope.ok = true;
@@ -63,7 +63,7 @@ angular.module('jumplink.cms.event', [
         fileItem.upload();
       };
 
-      typeModal = $modal({title: 'Typ wählen', templateUrl: 'events/typechoosermodal', show: false});
+      typeModal = $modal({title: 'Typ wählen', templateUrl: '/views/modern/events/typechoosermodal', show: false});
       typeModal.$scope.chooseType = chooseType;
 
       editModal.$scope.$on('modal.hide.before',function(event, editModal) {

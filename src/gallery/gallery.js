@@ -37,7 +37,7 @@ angular.module('jumplink.cms.gallery', [
     };
 
     var setEditModal = function($scope) {
-      editModal = $modal({scope: $scope, title: 'Bild bearbeiten', templateUrl: 'gallery/editimagemodal', show: false});
+      editModal = $modal({scope: $scope, title: 'Bild bearbeiten', templateUrl: '/views/modern/gallery/editmodal.jade', show: false});
       return getEditModal();
     };
 
@@ -96,7 +96,7 @@ angular.module('jumplink.cms.gallery', [
         fileItem.upload();
       }
 
-      uploadModal = $modal({scope: $scope, title: 'Bilder hinzufügen', uploader: $scope.uploader, templateUrl: 'gallery/uploadimagesmodal', show: false});
+      uploadModal = $modal({scope: $scope, title: 'Bilder hinzufügen', uploader: $scope.uploader, templateUrl: '/views/modern/gallery/uploadimagesmodal.jade', show: false});
       uploadModal = prepairUploadModal(uploadModal, imageBlocks, contentBlocks);
 
       return getUploadModal();

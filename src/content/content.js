@@ -22,7 +22,7 @@ angular.module('jumplink.cms.content', [
     }
 
     var setEditModal = function($scope) {
-      editModal = $modal({title: 'Inhaltsblock bearbeiten', templateUrl: 'contentmodal', show: false});
+      editModal = $modal({title: 'Inhaltsblock bearbeiten', templateUrl: '/views/modern/contentmodal.jade', show: false});
       editModal.$scope.ok = false;
       editModal.$scope.accept = function (hide) {
         editModal.$scope.ok = true;
@@ -464,7 +464,7 @@ angular.module('jumplink.cms.content', [
 
     return {
       restrict: 'E',
-      templateUrl: 'jlContent',
+      templateUrl: '/views/modern/content.jade',
       scope: {
         authenticated : "=",
         html: "=",

@@ -1,0 +1,36 @@
+.modal(tabindex='-1', role='dialog')
+  .modal-dialog
+    form.modal-content(role='form', name="form", novalidate)
+      .modal-header(ng-show='title')
+        button.close(type='button', ng-click='abort($hide)') ×
+        h4.modal-title(ng-bind='title')
+      .modal-body
+        .form-group.has-feedback(ng-class="{'has-error': form.title.$invalid, 'has-success': form.title.$valid}")
+          label.control-label(for='contentedittitle') Überschrift
+          .input-group
+            .input-group-addon
+              i.fa.fa-header
+            input#contentedittitle.form-control(type='text', name="title", required, placeholder='Überschrift eingeben', ng-model="content.title")
+          span.form-control-feedback(ng-hide="form.title.$error.required", title="Alles Okay!"): i.fa.fa-check
+          span.form-control-feedback(ng-show="form.title.$error.required", title="Bitte geben Sie hier Ihre Überschrift ein."): i.fa.fa-exclamation-triangle
+        //- .form-group
+        //-   label(for='content') Inhalt
+        //-   .textarea#content(medium-editor, ng-model="content.content", options='{"placeholder": "Inhalt eingeben","buttons": ["bold", "italic", "underline", "anchor", "header1" , "header2", "quote", "orderedlist", "unorderedlist"]}', bind-options="mediumBindOptions", style="max-height:200px; overflow-y:scroll;")
+        .form-group
+          label(for='changeName') Identifikation an Überschrift anpassen
+          br
+          toggle-switch#changeName(ng-model="changeName", on-label="Ja", off-label="Nein")
+        .form-group
+          label(for='name') Identifikation
+          input#name.form-control(type='text', ng-model="content.name", ng-disabled="true", placeholder='Wird automatisch ausgefüllt', ng-pattern="onlyChars")
+        .panel.panel-info
+          .panel-heading
+            h3#panel-title.panel-title Hinweis
+          .panel-body
+            p
+              | Die Überschrift muss ausgefüllt sein, da - sofern aktiviert - aus der Überschrift die Identifikation generiert und bei der Verlinkung innerhalb der Subnavigation benötigt wird. Die Identifikation sollte nach Möglichkeit nicht nachträglich verändert werden.
+            p
+              | Sie können die Überschrift jedoch auch noch nachträglich bearbeiten.
+      .modal-footer
+        button.btn.btn-danger(type='button', ng-click='abort($hide)') Schließen
+        button.btn.btn-primary(type='submit', ng-click='accept($hide)', ng-disabled="form.$invalid") Übernehmen

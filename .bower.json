@@ -1,0 +1,28 @@
+{
+  "name": "jumplink-cms-angular",
+  "main": "./dist/jumplink-cms-angular.min.js",
+  "homepage": "https://github.com/JumpLink/cms-angular",
+  "ignore": [
+    "examples"
+  ],
+  "dependencies": {
+    "angular-strap": "~2.3.1"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "angular",
+    "cms",
+    "jumplink",
+    "module",
+    "sails"
+  ],
+  "_release": "72655a2719",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "72655a2719d710d193bf1c7ec50c60e4a46bd8e4"
+  },
+  "_source": "git://github.com/JumpLink/cms-angular.git",
+  "_target": "master",
+  "_originalSource": "JumpLink/cms-angular"
+}

@@ -1,0 +1,22 @@
+.aside(tabindex='-1', role='dialog')
+  .aside-dialog
+    .aside-content
+      .aside-header(ng-show='title')
+        button.close(type='button', ng-click='$hide()') ×
+        h4.aside-title(ng-bind='title')
+      .aside-body.bs-sidebar(bs-navbar)
+        ul.nav.bs-sidenav
+          li(data-match-route='/*home*')
+            a(ui-sref='layout.home') Startseite
+          li(data-match-route='/*members*')
+            a(ui-sref='layout.members') Vorstand / Beirat
+          li(data-match-route='/*events*')
+            a(ui-sref='layout.timeline') Veranstaltungen
+          li(data-match-route='/*gallery*')
+            a(ui-sref='layout.gallery') Galerie
+          li(data-match-route='/*application*')
+            a(ui-sref='layout.application') Aufnahmeantrag
+          li(data-match-route='/*links*')
+            a(ui-sref='layout.links') Links
+          li(data-match-route='/*imprint*')
+            a(ui-sref='layout.imprint') Impressum

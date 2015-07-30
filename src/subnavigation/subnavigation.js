@@ -11,7 +11,7 @@ angular.module('jumplink.cms.subnavigation', [
     var editModal = null;
 
     var setEditModal = function($scope) {
-      editModal = $modal({scope: $scope, title: 'Navigation bearbeiten', templateUrl: 'editsubnavigationmodal', show: false});
+      editModal = $modal({scope: $scope, title: 'Navigation bearbeiten', templateUrl: '/views/modern/editsubnavigationmodal.jade', show: false});
       return getEditModal();
     };
 

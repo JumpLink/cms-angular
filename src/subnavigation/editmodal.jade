@@ -1,0 +1,38 @@
+.modal(tabindex='-1', role='dialog')
+  .modal-dialog
+    form.modal-content(role='form', name="form", novalidate)
+      .modal-header(ng-show='title')
+        button.close(type='button', ng-click='$hide()') ×
+        h4.modal-title(ng-bind='title')
+      .modal-body
+        table.table
+          thead
+            tr
+              th Drag
+              th Name
+              th Ziel Indifikator
+              th Aktionen
+          tbody
+            tr(ng-repeat="nav in navs", ng-drag="true", ng-drag-data="nav", data-allow-transform="true", ng-drag-success="onDragOnNavComplete($index,$data,$event)", ng-drop="true", ng-drop-success="onDropOnNavComplete($index,$data,$event)")
+              td(scope='row')
+                i.fa.fa-bars(style="font-size: 34px; color: lightgray;")
+              td
+                input(id="subnavigationeditname{{$index}}", type="text" class="form-control" placeholder="Name eingeben", ng-model="nav.name", ng-cancel-drag)
+              td
+                input(id="subnavigationedittarget{{$index}}", type="text" class="form-control" placeholder="Ziel-Indifikator eingeben", ng-model="nav.target", ng-cancel-drag)
+              td
+                .btn-group
+                  //- button.btn.btn-warning(ng-disabled="$index <= 0", ng-click="moveBackwardNav($index, nav)", title="Block nach oben verschieben"): i.fa.fa-backward.fa-rotate-90
+                button.btn.btn-danger(type='button', ng-click="removeNav($index, nav)", title="Subnavigation löschen", ng-cancel-drag): i.fa.fa-trash
+                  //- button.btn.btn-warning(ng-disabled="$index >= navs.length - 1", ng-click="moveForwardNav($index, nav)", title="Block nach unten verschieben"): i.fa.fa-forward.fa-rotate-90
+        .panel.panel-info
+          .panel-heading
+            h3#panel-title.panel-title Hinweis
+          .panel-body
+            | Sie können die Subnavigationen per Drag'n'Drop verschieben.
+      .modal-footer
+        .pull-left
+          button.btn.btn-warning(type='button', ng-click="addNav()", title="Subnavigationen hinzufügen"): i.fa.fa-plus
+        .pull-right
+          button.btn.btn-success(type='button', ng-click='$hide()') Schließen
+          button.btn.btn-primary(type='submit', ng-click='save();$hide()') Speichern
