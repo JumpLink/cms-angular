@@ -1,7 +1,7 @@
 angular.module('ngHistory', [
   ])
 
-  jumplink.cms.service('HistoryService', function ($window, $location, $anchorScroll, $timeout, $log) {
+  .service('HistoryService', function ($window, $location, $anchorScroll, $timeout, $log) {
     var back = function () {
       $window.history.back();
     }

@@ -15,7 +15,7 @@ angular.module('ngFocus', [
           element.focus();
       });
     };
-  });
+  })
   
   .directive('eventFocus', function(focus) {
     return function(scope, elem, attr) {
@@ -29,6 +29,6 @@ angular.module('ngFocus', [
         elem.off(attr.eventFocus);
       });
     };
-  });
+  })
 
 ;

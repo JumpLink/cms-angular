@@ -2,7 +2,7 @@ angular.module('jumplink.cms.user', [
     'sails.io',
   ])
 
-  jumplink.cms.service('UserService', function ($rootScope, $sailsSocket, $log) {
+  .service('UserService', function ($rootScope, $sailsSocket, $log) {
     var isSubscribed = false;
 
     var save = function(user, callback) {
