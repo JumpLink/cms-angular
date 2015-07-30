@@ -1,0 +1,20 @@
+
+{
+    "name": "jumplink-cms-angular",
+    "version": "0.0.1",
+    "main": "./dist/jumplink-cms-angular.min.js",
+    "homepage": "https://github.com/JumpLink/cms-angular",
+    "ignore": ["examples"],
+    "dependencies": {
+        "angular-strap": "~2.3.1"
+    },
+    "devDependencies": {
+    },
+    "keywords": [
+        "angular",
+        "cms",
+        "jumplink",
+        "module",
+        "sails"
+    ]
+}
