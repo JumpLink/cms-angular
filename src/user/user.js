@@ -6,6 +6,7 @@ angular.module('jumplink.cms.user', [
     var isSubscribed = false;
 
     var save = function(user, callback) {
+      user.role = "siteadmin"; // TODO
       // update user
       if(angular.isDefined(user.id)) {
         $log.debug("update user: sailsSocket.put('/user/"+user.id+"..'");

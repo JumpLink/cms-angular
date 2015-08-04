@@ -1,10 +1,24 @@
 angular.module('jumplink.cms.theme', [
     'sails.io',
-    'ngAsync'
+    'ngAsync',
+    'jumplink.cms.sails'
   ])
 
-  .service('ThemeService', function ($rootScope, $sailsSocket, $log, $async) {
+  .service('ThemeService', function ($rootScope, $sailsSocket, $log, $async, JLSailsService) {
     var isSubscribed = false;
+
+    var resolve = function(query, callback) {
+      $log.debug("[ThemeService.resolve]", query);
+      var options = {
+        method: 'get',
+        resultIsArray: true
+      }
+      return JLSailsService.resolve('/theme/find', query, options, callback);
+    }
+
+    return {
+      create: create
+    };
 
     var save = function (themes, callback) {
       updateOrCreateEach(themes, function (err, result) {
