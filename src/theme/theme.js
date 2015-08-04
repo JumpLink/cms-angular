@@ -17,7 +17,7 @@ angular.module('jumplink.cms.theme', [
     }
 
     return {
-      create: create
+      resolve: resolve
     };
 
     var save = function (themes, callback) {
