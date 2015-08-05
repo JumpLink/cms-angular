@@ -23,9 +23,19 @@ angular.module('jumplink.cms.multisite', [
       return JLSailsService.resolve('/multisite/findnames', query, options, callback);
     }
 
+    var resolveHosts = function(query, callback) {
+      $log.debug("[MultisiteService.resolveNames]");
+      var options = {
+        method: 'get',
+        resultIsArray: true
+      }
+      return JLSailsService.resolve('/multisite/findhosts', query, options, callback);
+    }
+
     return {
       resolve: resolve,
-      resolveNames: resolveNames
+      resolveNames: resolveNames,
+      resolveHosts: resolveHosts
     };
   })
 ;

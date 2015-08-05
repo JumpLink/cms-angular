@@ -7,8 +7,12 @@ angular.module('jumplink.cms.theme', [
   .service('ThemeService', function ($rootScope, $sailsSocket, $log, $async, JLSailsService) {
     var isSubscribed = false;
 
-    var resolve = function(query, callback) {
-      $log.debug("[ThemeService.resolve]", query);
+    /**
+     * find themes for current host from database and isert priority from database (or from local.json if no priority is set).
+     * @see CMS.ThemesController.find
+     */
+    var find = function(query, callback) {
+      $log.debug("[ThemeService.find]", query);
       var options = {
         method: 'get',
         resultIsArray: true
@@ -16,9 +20,18 @@ angular.module('jumplink.cms.theme', [
       return JLSailsService.resolve('/theme/find', query, options, callback);
     }
 
-    return {
-      resolve: resolve
-    };
+    /**
+     * find themes for any host from database and isert priority from database (or from local.json if no priority is set).
+     * Only for superadmins!
+     */
+    var findByHost = function(host, callback) {
+      $log.debug("[ThemeService.findByHost]", host);
+      var options = {
+        method: 'post',
+        resultIsArray: true
+      }
+      return JLSailsService.resolve('/theme/findbyhost', {host: host}, options, callback);
+    }
 
     var save = function (themes, callback) {
       updateOrCreateEach(themes, function (err, result) {
@@ -32,18 +45,27 @@ angular.module('jumplink.cms.theme', [
       //   $log.debug(data, status, headers, config);
       //   if(angular.isDefined(callback)) callback(data, status, headers, config)
       // });
-      var iterator = function (theme, cb) {
-        $sailsSocket.put('/Theme/updateOrCreate', theme).success(function(data, status, headers, config) {
-          $log.debug(data, status, headers, config);
-          // TODO set error
+      // var iterator = function (theme, cb) {
+      //   $sailsSocket.put('/Theme/updateOrCreate', theme).success(function(data, status, headers, config) {
+      //     $log.debug(data, status, headers, config);
+      //     // TODO set error
           
-        });
-      }
-      $async.each(themes, iterator, callback)
-      $sailsSocket.put('/Theme/updateOrCreateEach', themes).success(function(data, status, headers, config) {
+      //   });
+      // }
+      // $async.each(themes, iterator, callback)
+      $sailsSocket.put('/Theme/updateOrCreateEach', {themes: themes}).success(function(data, status, headers, config) {
         $log.debug(data, status, headers, config);
         callback(data, status, headers, config)
       });
+    }
+
+    var updateOrCreateEachByHost = function(host, themes, callback) {
+      $log.debug("[ThemeService.updateOrCreateEachByHost]", host, themes);
+      var options = {
+        method: 'post',
+        resultIsArray: true
+      }
+      return JLSailsService.resolve('/Theme/updateOrCreateEachByHost', {host: host, themes: themes}, options, callback);
     }
 
     // TODO
@@ -80,9 +102,12 @@ angular.module('jumplink.cms.theme', [
     }
 
     return {
-      save: save
-      , updateOrCreateEach: updateOrCreateEach
-     ,  subscribe: subscribe
+      find: find,
+      findByHost: findByHost,
+      save: save,
+      updateOrCreateEach: updateOrCreateEach,
+      updateOrCreateEachByHost: updateOrCreateEachByHost,
+      subscribe: subscribe
     };
   });
 
