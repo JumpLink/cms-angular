@@ -14,6 +14,7 @@ angular.module('jumplink.cms.routes', [
       if(!data || !data.title) data.title = "";
       if(!data || !data.state) data.state = {};
       if(!data.state.name) data.state.name = "";
+      if(!data.state.customstate) data.state.customstate = false;
       if(!data.state.url) data.state.url = "";
       if(!data.state.views) data.state.views = "";
       if(!data.state.resolve) data.state.resolve = "";
