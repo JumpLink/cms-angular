@@ -7,7 +7,7 @@ angular.module('jumplink.cms.routes', [
     'jumplink.cms.utilities'
   ])
 
-  .service('RoutesService', function ($rootScope, JLSailsService, $log) {
+  .service('RoutesService', function ($rootScope, JLSailsService, $log, SortableService) {
 
     var create = function(data) {
       if(!data || !data.match) data.match = "";
@@ -15,6 +15,8 @@ angular.module('jumplink.cms.routes', [
       if(!data || !data.state) data.state = {};
       if(!data.state.name) data.state.name = "";
       if(!data.state.url) data.state.url = "";
+      if(!data.state.views) data.state.views = "";
+      if(!data.state.resolve) data.state.resolve = "";
       if(!data || !data.fallback) data.fallback = {};
       if(!data.fallback.url) data.fallback.url = "";
       return data;
@@ -68,10 +70,55 @@ angular.module('jumplink.cms.routes', [
     var find = function(query, callback) {
       $log.debug("[RoutesService.find]");
       var options = {
-        method: 'get',
+        method: 'post',
         resultIsArray: true
       }
       return JLSailsService.resolve('/routes/find', query, options, callback);
+    }
+
+    var findByHost = function(query, callback) {
+      $log.debug("[RoutesService.findByHost]");
+      var options = {
+        method: 'post',
+        resultIsArray: true
+      }
+      return JLSailsService.resolve('/Routes/findByHost', query, options, callback);
+    }
+
+    var updateOrCreate = function(route, callback) {
+      $log.debug("[RoutesService.updateOrCreate]", route);
+      var options = {
+        method: 'post',
+        resultIsArray: false
+      }
+      return JLSailsService.resolve('/Routes/updateOrCreate', {route: route}, options, callback);
+    }
+
+    var updateOrCreateByHost = function(host, route, callback) {
+      $log.debug("[RoutesService.updateOrCreateByHost]", host, route);
+      var options = {
+        method: 'post',
+        resultIsArray: false
+      }
+      return JLSailsService.resolve('/Routes/updateOrCreateByHost', {host: host, route: route}, options, callback);
+    }
+
+    var updateOrCreateEach = function(routes, callback) {
+      $log.debug("[RoutesService.updateOrCreateEach]", routes);
+      var options = {
+        method: 'post',
+        resultIsArray: true
+      }
+      return JLSailsService.resolve('/Routes/updateOrCreateEach', {routes: routes}, options, callback);
+    }
+
+    var updateOrCreateEachByHost = function(host, routes, callback) {
+      $log.debug("[RoutesService.updateOrCreateEachByHost]", host, routes);
+      var options = {
+        method: 'post',
+        resultIsArray: true
+      }
+      return JLSailsService.resolve('/Routes/updateOrCreateEachByHost', {host: host, routes: routes}, options, callback);
     }
 
     return {
@@ -82,7 +129,12 @@ angular.module('jumplink.cms.routes', [
       moveBackward: moveBackward,
       removeFromClient: removeFromClient,
       remove: remove,
-      find: find
+      find: find,
+      findByHost: findByHost,
+      updateOrCreate: updateOrCreate,
+      updateOrCreateByHost: updateOrCreateByHost,
+      updateOrCreateEach: updateOrCreateEach,
+      updateOrCreateEachByHost: updateOrCreateEachByHost,
     };
   })
 ;

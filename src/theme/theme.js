@@ -25,7 +25,7 @@ angular.module('jumplink.cms.theme', [
      * Only for superadmins!
      */
     var findByHost = function(host, callback) {
-      $log.debug("[ThemeService.findByHost]", host);
+      // $log.debug("[ThemeService.findByHost]", host);
       var options = {
         method: 'post',
         resultIsArray: true
@@ -40,27 +40,20 @@ angular.module('jumplink.cms.theme', [
     }
     
     var updateOrCreateEach = function(themes, callback) {
-      $log.debug(themes);
-      // $sailsSocket.put('/Theme/updateOrCreateEach', themes).success(function(data, status, headers, config) {
+      $log.debug("[ThemeService.updateOrCreateEach]", themes);
+      // $sailsSocket.put('/Theme/updateOrCreateEach', {themes: themes}).success(function(data, status, headers, config) {
       //   $log.debug(data, status, headers, config);
-      //   if(angular.isDefined(callback)) callback(data, status, headers, config)
+      //   callback(data, status, headers, config)
       // });
-      // var iterator = function (theme, cb) {
-      //   $sailsSocket.put('/Theme/updateOrCreate', theme).success(function(data, status, headers, config) {
-      //     $log.debug(data, status, headers, config);
-      //     // TODO set error
-          
-      //   });
-      // }
-      // $async.each(themes, iterator, callback)
-      $sailsSocket.put('/Theme/updateOrCreateEach', {themes: themes}).success(function(data, status, headers, config) {
-        $log.debug(data, status, headers, config);
-        callback(data, status, headers, config)
-      });
+      var options = {
+        method: 'post',
+        resultIsArray: true
+      }
+      return JLSailsService.resolve('/Theme/updateOrCreateEach', {themes: themes}, options, callback);
     }
 
     var updateOrCreateEachByHost = function(host, themes, callback) {
-      $log.debug("[ThemeService.updateOrCreateEachByHost]", host, themes);
+      // $log.debug("[ThemeService.updateOrCreateEachByHost]", host, themes);
       var options = {
         method: 'post',
         resultIsArray: true
