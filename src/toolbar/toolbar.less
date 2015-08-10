@@ -1,0 +1,42 @@
+.navbar-btn {
+  margin-left: 8px;
+}
+
+// not only on @media (min-width: 768px)
+.navbar-right {
+  float: right !important;
+}
+
+.navbar-left,
+.navbar-header {
+  float: left !important;
+}
+
+.navbar-toggle {
+  margin-left: 15px;
+  display: block!important;
+  float: left;
+}
+
+// legacy mode: show aside just over css
+.navbar-btn-legacy {
+  position: fixed;
+  top: 0;
+  z-index: 10000;
+  .aside-legacy {
+    display: none;
+  }
+  &:active, &:focus ,&:hover {
+    .aside-legacy {
+      display: block;
+    }
+  }
+}
+
+// https://github.com/angular/angular.js/issues/2070#issuecomment-57405205
+.anchor-static-navbar {
+  margin: 0;
+  padding: 0;
+  margin-top: -50px;
+  padding-top: 50px;
+}

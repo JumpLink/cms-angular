@@ -1,0 +1,30 @@
+// angular-carousel
+@import (less) "./../../../angular-carousel/dist/angular-carousel.css";
+
+
+
+// dynamic height: https://github.com/revolunet/angular-carousel/issues/309
+ul[rn-carousel] {
+  margin-bottom: 0;
+  > li {
+    position: relative;
+    margin-left: -100%;
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+}
+
+.rn-carousel-control {
+  &.rn-carousel-control-prev:before {
+    color: white;
+    content: @fa-var-arrow-circle-left;
+    font: normal normal normal 40px/1 FontAwesome;
+  }
+  &.rn-carousel-control-next:before {
+    color: white;
+    content: @fa-var-arrow-circle-right;
+    font: normal normal normal 40px/1 FontAwesome;
+  }
+}

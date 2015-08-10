@@ -1,0 +1,91 @@
+@import "./../../../bootstrap-additions/src/aside/aside";
+
+// custom sidebar for sidebar in aside
+.aside-content {
+  .aside-body.bs-sidebar {
+    float:right;
+    width: 100%;
+    margin: 0;
+    .bs-sidenav {
+      width: 100%;
+      margin: 0;
+    }
+  }
+}
+
+.aside-title {
+  text-align: left;
+}
+
+.bs-sidebar{
+  margin-top: 40px;
+  margin-bottom: 20px;
+
+  .nav {
+    >li {
+      &.active {
+        // Show Childs
+        .nav {
+          display: block;
+        }
+      }
+      >a {
+        display: block;
+        font-size: 13px;
+        font-weight: 500;
+        color: #999;
+        padding: 4px 15px;
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        &:hover, &:focus {
+          padding-right: 14px;
+          color: @brand-primary;
+          text-decoration: none;
+          background-color: transparent;
+          border-right: 1px solid @brand-primary;
+        }
+      }
+    }
+
+    >.active:focus>a,
+    >.active:hover>a,
+    >.active>a {
+      padding-right: 13px;
+      font-weight: 700;
+      color: @brand-primary;
+      background-color: transparent;
+      border-right: 2px solid @brand-primary;
+    }
+
+    // Childs
+    .nav {
+      display: none;
+      padding-bottom: 10px;
+
+      >li>a {
+        padding-top: 2px;
+        padding-bottom: 2px;
+        padding-left: 30px;
+        font-size: 12px;
+        font-weight: 400;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      >li>a:focus,
+      >li>a:hover {
+        padding-left: 29px;
+      }
+
+      >.active:focus>a,
+      >.active:hover>a,
+      >.active>a {
+        font-weight: 500;
+        padding-left: 28px;
+      }
+    }
+  }
+}

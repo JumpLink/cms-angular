@@ -1,0 +1,31 @@
+// angular-medium-editor
+@import (less) "./../third-party/medium-editor/dist/css/medium-editor.css";
+@import (less) "./../third-party/medium-editor/dist/css/themes/bootstrap.css";
+// @import (less) "./../third-party/medium-editor/dist/css/themes/default.css";
+
+.medium-editor-placeholder {
+  &:after {
+    position: relative;
+    cursor: text;
+  }
+}
+
+// textarea as class to get the bootstrap input textarea style for angular-medium-editor
+.textarea {
+  .form-control;
+  height: auto;
+  min-height: 100px;
+  &.medium-editor-placeholder:after {
+    color: @input-color-placeholder;
+    position: absolute;
+    top: 6px;
+    left: 12px;
+    font-style: normal;
+  }
+}
+
+.timeline {
+  .medium-editor-placeholder:after {
+    position: static;
+  }
+}
