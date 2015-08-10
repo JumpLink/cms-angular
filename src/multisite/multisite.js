@@ -6,7 +6,7 @@ angular.module('jumplink.cms.multisite', [
   .service('MultisiteService', function ($rootScope, JLSailsService, $log) {
 
     var resolve = function(query, callback) {
-      $log.debug("[MultisiteService.resolve]");
+      // $log.debug("[MultisiteService.resolve]");
       var options = {
         method: 'get',
         resultIsArray: true
@@ -15,7 +15,7 @@ angular.module('jumplink.cms.multisite', [
     }
 
     var resolveNames = function(query, callback) {
-      $log.debug("[MultisiteService.resolveNames]");
+      // $log.debug("[MultisiteService.resolveNames]");
       var options = {
         method: 'get',
         resultIsArray: true
@@ -24,7 +24,7 @@ angular.module('jumplink.cms.multisite', [
     }
 
     var resolveHosts = function(query, callback) {
-      $log.debug("[MultisiteService.resolveNames]");
+      // $log.debug("[MultisiteService.resolveNames]");
       var options = {
         method: 'get',
         resultIsArray: true

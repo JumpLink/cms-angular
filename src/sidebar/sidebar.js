@@ -1,9 +1,8 @@
 angular.module('jumplink.cms.sidebar', [
     'mgcrea.ngStrap.aside',
-    'mgcrea.ngStrap.navbar',
   ])
 
-  .directive('sidebar', function ($compile, $window) {
+  .directive('jlsidebar', function ($compile, $window) {
 
     return {
       restrict: 'E',

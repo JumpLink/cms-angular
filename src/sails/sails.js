@@ -15,7 +15,7 @@ angular.module('jumplink.cms.sails', [
       if(angular.isUndefined(options.method)) options.method = 'get';
       if(angular.isUndefined(options.resultIsArray)) options.resultIsArray = false;
       if(angular.isUndefined(query)) query = {};
-      $log.debug("[ResolveService.resolve]", url, query, options);
+      // $log.debug("[JLSailsService.resolve]", url, query, options);
 
       return $sailsSocket[options.method](url, query).then (function (data) {
         if(angular.isUndefined(data) || angular.isUndefined(data.data)) {

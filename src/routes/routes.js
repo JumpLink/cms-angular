@@ -69,7 +69,7 @@ angular.module('jumplink.cms.routes', [
     };
 
     var find = function(query, callback) {
-      $log.debug("[RoutesService.find]");
+      // $log.debug("[RoutesService.find]");
       var options = {
         method: 'post',
         resultIsArray: true
@@ -78,7 +78,7 @@ angular.module('jumplink.cms.routes', [
     }
 
     var findByHost = function(query, callback) {
-      $log.debug("[RoutesService.findByHost]");
+      // $log.debug("[RoutesService.findByHost]");
       var options = {
         method: 'post',
         resultIsArray: true
