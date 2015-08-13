@@ -9,12 +9,13 @@ angular.module('jumplink.cms.toolbar', [
       scope: {
         routes: "=",
         title: "=",
-        shorttitle: "="
+        shorttitle: "=",
+        fluid: "=",
+        position: "=", 
       },
       link: function ($scope, $element, $attrs) {
         
       }
     };
   })
-
 ;

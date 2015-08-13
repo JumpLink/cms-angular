@@ -1,5 +1,5 @@
-.navbar.navbar-default.navbar-fixed-top(role='navigation', bs-navbar)
-  .container
+.navbar.navbar-default(role='navigation', bs-navbar, ng-class="{'navbar-static-top': position == 'static-top', 'navbar-fixed-top': position == 'fixed-top', 'navbar-fixed-bottom': position == 'fixed-bottom'}")
+  div(ng-class="{'container': {{!fluid}}, 'container-fluid': {{!fluid}}}")
     .navbar-header
       button.btn.btn-primary.navbar-btn.navbar-left.hidden-lg.hidden-md(type="button", data-template-url="", data-template="<jlsidebar routes='routes'></jlsidebar>", bs-aside="aside", data-title="Menü", data-placement="left", data-animation="am-slide-left", data-container=".main-body", style="font-size: 14px; margin-left: 15px; margin-right: 15px;")
         i.fa.fa-bars
