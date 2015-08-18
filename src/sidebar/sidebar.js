@@ -7,7 +7,10 @@ angular.module('jumplink.cms.sidebar', [
     return {
       restrict: 'E',
       templateUrl: '/views/modern/sidebar.jade',
-      scope: {routes : "="},
+      scope: {
+        routes: "=",
+        title: "=" 
+      },
       link: function ($scope, $element, $attrs) {
         
       }
