@@ -16,7 +16,7 @@ angular.module('jumplink.cms.session', [
 
     // Used for routes you can only visit if you are signed in, throws an error message if your are not authenticated
     var authenticated = function () {
-      $log.log("authenticated");
+      $log.log("[SessionService.authenticated] authenticated");
       var deferred = $q.defer();
       $sailsSocket.get('/session/authenticated').then (function (data) {
         if (data.data) {
@@ -32,7 +32,7 @@ angular.module('jumplink.cms.session', [
 
     // Used if you need authentication conditions
     var isauthenticated = function () {
-      $log.log("authenticated");
+      $log.log("[SessionService.isauthenticated] authenticated");
       var deferred = $q.defer();
       return $sailsSocket.get('/session/authenticated').then (function (data) {
         return data.data;
