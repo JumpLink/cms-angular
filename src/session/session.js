@@ -14,6 +14,15 @@ angular.module('jumplink.cms.session', [
       return JLSailsService.resolve('/session/create', user, options, callback);
     };
 
+    var destroy = function(user, callback) {
+      $log.debug("[SessionService.destroy]", user);
+      var options = {
+        method: 'post',
+        resultIsArray: false
+      }
+      return JLSailsService.resolve('/session/destroy', user, options, callback);
+    };
+
     // Used for routes you can only visit if you are signed in, throws an error message if your are not authenticated
     var authenticated = function () {
       $log.log("[SessionService.authenticated] authenticated");
@@ -42,6 +51,7 @@ angular.module('jumplink.cms.session', [
 
     return {
       create: create,
+      destroy: destroy,
       authenticated: authenticated,
       isauthenticated: isauthenticated
     };
