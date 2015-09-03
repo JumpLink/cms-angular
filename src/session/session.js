@@ -40,20 +40,19 @@ angular.module('jumplink.cms.session', [
     };
 
     // Used if you need authentication conditions
-    var isauthenticated = function () {
+    var isAuthenticated = function () {
       $log.log("[SessionService.isauthenticated] authenticated");
       var deferred = $q.defer();
       return $sailsSocket.get('/session/authenticated').then (function (data) {
         return data.data;
       });
-      return deferred.promise;
     };
 
     return {
       create: create,
       destroy: destroy,
       authenticated: authenticated,
-      isauthenticated: isauthenticated
+      isAuthenticated: isAuthenticated
     };
   })
 ;

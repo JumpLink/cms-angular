@@ -13,6 +13,8 @@ angular.module('jumplink.cms.routes', [
       if(!data || !data.match) data.match = "";
       if(!data || !data.title) data.title = "";
       if(!data || !data.state) data.state = {};
+      if(!data || !data.url) data.url = "";
+      if(!data || !data.alternativeUrls) data.alternativeUrls = [];
       if(!data.state.name) data.state.name = "";
       if(!data.state.customstate) data.state.customstate = false;
       if(!data.state.url) data.state.url = "";
@@ -130,12 +132,14 @@ angular.module('jumplink.cms.routes', [
       moveBackward: moveBackward,
       removeFromClient: removeFromClient,
       remove: remove,
+      destroy: remove, // Alias
       find: find,
       findByHost: findByHost,
       updateOrCreate: updateOrCreate,
       updateOrCreateByHost: updateOrCreateByHost,
       updateOrCreateEach: updateOrCreateEach,
       updateOrCreateEachByHost: updateOrCreateEachByHost,
+      saveEachByHost: updateOrCreateEachByHost, // Alias
     };
   })
 ;
