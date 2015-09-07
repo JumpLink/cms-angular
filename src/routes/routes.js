@@ -7,11 +7,25 @@ angular.module('jumplink.cms.routes', [
     'jumplink.cms.utilities'
   ])
 
+  .filter('showOnlyMainRoutes', function() {
+    // In the return function, we must pass in a single parameter which will be the data we will work on.
+    // We have the ability to support multiple other parameters that can be passed into the filter optionally
+    return function(routes, active) {
+      if(active != true) return routes;
+      var result = [];
+      for (var i = 0; i < routes.length; i++) {
+        if(routes[i].main === true) result.push(routes[i]);
+      };
+      return result;
+    }
+  })
+
   .service('RoutesService', function ($rootScope, JLSailsService, $log, SortableService) {
 
     var create = function(data) {
       if(!data || !data.match) data.match = "";
       if(!data || !data.title) data.title = "";
+      if(!data.main) data.main = false;
       if(!data || !data.state) data.state = {};
       if(!data || !data.url) data.url = "";
       if(!data || !data.alternativeUrls) data.alternativeUrls = [];

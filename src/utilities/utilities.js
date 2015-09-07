@@ -11,7 +11,7 @@ angular.module('jumplink.cms.utilities', [
       return result;
     }
 
-    /*
+    /**
      * find value by key in array
      */
     var findKeyValue = function (objects, key, value) {
@@ -25,9 +25,19 @@ angular.module('jumplink.cms.utilities', [
       return index;
     }
 
+    /**
+     * Capitalize the first character of a string, but not change the case of any of the other letters.
+     *
+     * @see http://stackoverflow.com/questions/1026069/capitalize-the-first-letter-of-string-in-javascript
+     */
+    var capitalizeFirstLetter = function (string) {
+      return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+    }
+
     return {
       invertOrder: invertOrder,
-      findKeyValue: findKeyValue
+      findKeyValue: findKeyValue,
+      capitalizeFirstLetter: capitalizeFirstLetter
     };
   })
   
