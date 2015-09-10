@@ -55,9 +55,17 @@ angular.module('jumplink.cms.gallery', [
       return uploadModal;
     }
 
-    var setUploadModal = function($scope, imageBlocks, contentBlocks, cb) {
+    var setUploadModal = function($scope, imageBlocks, contentBlocks, options, cb) {
+      var uploadOptions = {
+        url: 'gallery/upload',
+        removeAfterUpload: true,
+        // WARN: headers HTML5 only
+        headers: {
+          options: JSON.stringify(options)
+        }
+      };
 
-      $scope.uploader = new FileUploader({url: 'gallery/upload', removeAfterUpload: true});
+      $scope.uploader = new FileUploader(uploadOptions);
       $scope.uploader.filters.push({
         name: 'imageFilter',
         fn: function(item /*{File|FileLikeObject}*/, options) {
@@ -99,6 +107,7 @@ angular.module('jumplink.cms.gallery', [
       uploadModal = $modal({scope: $scope, title: 'Bilder hinzufügen', uploader: $scope.uploader, templateUrl: '/views/modern/gallery/uploadimagesmodal.jade', show: false});
       uploadModal = prepairUploadModal(uploadModal, imageBlocks, contentBlocks);
 
+      if(cb) return cb(getUploadModal())
       return getUploadModal();
     };
 
