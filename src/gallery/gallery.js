@@ -11,7 +11,9 @@ angular.module('jumplink.cms.gallery', [
 
   .service('GalleryService', function ($rootScope, $sailsSocket, $async, $filter, Fullscreen, SortableService, ContentService, FileUploader, $modal, $log) {
 
-    var editModal = null, uploadModal = null, fullscreenImage = null;
+    var editModal = null;
+    uploadModal = null;
+    fullscreenImage = null;
 
     var dropdown = [
       {
@@ -50,7 +52,11 @@ angular.module('jumplink.cms.gallery', [
       uploadModal.$scope.imageBlocks = imageBlocks;
       uploadModal.$scope.selects = getSelects(imageBlocks, contentBlocks);
       if(uploadModal.$scope.selects.length > 0)
-        uploadModal.$scope.selected = uploadModal.$scope.selects[0].value;
+        $rootScope.selectedContentBlock = uploadModal.$scope.selects[0].value;
+
+      $rootScope.$watch('selectedContentBlock', function(newValue, oldValue) {
+        $log.debug("selected changed to", newValue);
+      });
 
       return uploadModal;
     }
@@ -80,11 +86,11 @@ angular.module('jumplink.cms.gallery', [
         // WORKAROUND until the socket method works
         response.files.forEach(function (file, index, files) {
 
-          var selected = uploadModal.$scope.selected;
+          var selected = $rootScope.selectedContentBlock;
           var imageBlocks = uploadModal.$scope.imageBlocks;
           var currentImages = imageBlocks[selected];
 
-          // $log.debug("selected", selected, "imageBlocks", imageBlocks, "currentImages", currentImages);
+          $log.debug("[GalleryService.$scope.uploader.onCompleteItem] selected", selected, "imageBlocks", imageBlocks, "currentImages", currentImages);
 
           var last_position = 0;
           if(currentImages.length > 0) last_position = currentImages[currentImages.length-1].position;
@@ -94,6 +100,8 @@ angular.module('jumplink.cms.gallery', [
             file.position = last_position;
             file.content = selected;
           }
+
+          $log.debug("[GalleryService.$scope.uploader.onCompleteItem] file", file);
           
           currentImages.push(file);
         });

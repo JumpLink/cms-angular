@@ -1,0 +1,14 @@
+.modal(tabindex='-1', role='dialog')
+  .modal-dialog
+    .modal-content
+      .modal-header(ng-show='title')
+        button.close(type='button', ng-click='$hide()') ×
+        h4.modal-title(ng-bind='title')
+      .modal-body
+        img.profile-img(src='/assets/images/members/photo.png', alt='')
+        form.form-signin(role='form')
+          input.form-control(name="email", ng-model="user.email", type='text', placeholder='Email', ng-required='required', autofocus='autofocus')
+          input.form-control(name="password", ng-model="user.password", type='password', placeholder='Password', ng-required='required')
+      .modal-footer
+        button.btn.btn-primary(type='button', ng-click='signin(user);$hide()') Anmelden
+        button.btn.btn-default(type='button', ng-click='abort(user);$hide()') Abbrechen
