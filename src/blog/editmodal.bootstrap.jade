@@ -1,0 +1,52 @@
+.modal(tabindex='-1', role='dialog')
+  .modal-dialog
+    form.modal-content(role='form', name="blogPostform", novalidate)
+      .modal-header(ng-show='title')
+        button.close(type='button', ng-click='abort($hide)') ×
+        h4.modal-title(ng-bind='title')
+      .modal-body
+        .form-group.has-feedback(ng-class="{'has-error': blogPostform.title.$invalid, 'has-success': blogPostform.title.$valid}")
+          label(for='blogposttitle') Titel
+          .input-group
+            .input-group-addon
+              i.fa.fa-header
+            input#blogposttitle.form-control(type='text', name="title", ng-model="blogPost.title", required, placeholder='Titel eingeben')
+          span.form-control-feedback(ng-hide="blogPostform.title.$error.required", title="Alles Okay!"): i.fa.fa-check
+          span.form-control-feedback(ng-show="blogPostform.title.$error.required", title="Bitte geben Sie hier Ihren Titel ein."): i.fa.fa-exclamation-triangle
+        .form-group
+          label(for='blogpostcontent') Inhalt
+          .input-group
+            .input-group-addon
+              i.fa.fa-paragraph
+            textarea#blogpostcontent.form-control(type='text', name="content", ng-model="blogPost.content", placeholder='Inhalt eingeben')
+        .form-group
+          label(for='author') Author
+          .input-group
+            .input-group-addon
+              i.fa.fa-user
+            input#author.form-control(type='text', ng-model="blogPost.author", placeholder='Author eingeben')
+        .form-group
+          button.btn.btn-lg.btn-primary(type='button', ng-click="openTypeChooserModal(blogPost)")
+            | Ereignistyp auswählen
+        .form-group
+          label.control-label(for="createdAtdate") Anhang
+          //- https://github.com/nervgh/angular-file-upload
+          .input-group
+            span.input-group-btn
+              //- hide the browsers ugly upload button http://www.abeautifulsite.net/whipping-file-inputs-into-shape-with-bootstrap-3/
+              span.btn.btn-success.btn-file(title="Datei auswählen")
+                i.fa.fa-paperclip
+                input(type="file", nv-file-select, uploader="uploader")
+            //- just upload last selected file
+            input#attachment.form-control(type="text", title="Anhang", readonly, ng-if="uploader.queue[uploader.queue.length-1].file.name", placeholder='Kein Anhang', ng-model="uploader.queue[uploader.queue.length-1].file.name")
+            input#attachment.form-control(type="text", title="Anhang", readonly, ng-if="!uploader.queue[uploader.queue.length-1].file.name", placeholder='Kein Anhang', ng-model="blogPost.download")
+            span.input-group-btn
+              button.btn.btn-danger(ng-click="blogPost.download = null", ng-disabled="!blogPost.download", title="Anhang entfernen")
+                i.fa.fa-trash
+              button.btn.btn-primary(ng-click="upload(uploader.queue[uploader.queue.length-1], blogPost)", ng-disabled="!uploader.queue[uploader.queue.length-1].file.name", title="Hochladen")
+                i.fa.fa-upload
+          .progress(ng-show="uploader.queue[uploader.queue.length-1].file")
+            .progress-bar.progress-bar-success(role='progressbar', ng-model="uploader.queue[uploader.queue.length-1].progress", aria-valuenow='{{uploader.queue[uploader.queue.length-1].progress}}', aria-valuemin='0', aria-valuemax='100', ng-style="{ 'width': uploader.queue[uploader.queue.length-1].progress + '%' }")
+      .modal-footer
+        button.btn.btn-danger(type='button', ng-click='abort($hide)') Schließen
+        button.btn.btn-primary(type='submit', ng-click='accept($hide);', ng-disabled="blogPostform.$invalid") Übernehmen
