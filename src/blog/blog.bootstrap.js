@@ -1,4 +1,5 @@
 angular.module('jumplink.cms.bootstrap.blog', [
+    'jumplink.cms.blog',
     'mgcrea.ngStrap',
     'angular-medium-editor',
     'angularFileUpload',
@@ -13,31 +14,65 @@ angular.module('jumplink.cms.bootstrap.blog', [
 
     var editModal = null;
     var typeModal = null;
-    var types = ['lecture', 'panel discussion', 'travel', 'info', 'food', 'other'];
+    var types = ['news', 'other'];
 
-    var validate = function (event, cb) {
-      if(event.title) {
-        return fix(event, cb)
+    /**
+     * delete attachment on local / client / browser
+     */
+    var deleteAttachmentLocally = function (blogPosts, postIndex, attachmentIndex, cb) {
+      if(blogPosts[postIndex].attachments.length > 0) return blogPosts[postIndex].attachments.splice(attachmentIndex, 1);
+    };
+
+    /**
+     * delete attachment extern / server
+     */
+    var deleteAttachmentExternally = function (blogPosts, postIndex, attachmentIndex, cb) {
+      $sailsSocket.delete('/blog/deleteAttachment/', {blogPostID: blogPost.id, attachmentID: blogPosts[postIndex].attachments[attachmentIndex].id})
+      .success(function(users, status, headers, config) {
+        cb();
+      })
+      .error(function (data, status, headers, config) {
+        $log.error(data, status, headers, config);
+        cb(data, status, headers, config);
+      });
+    };
+
+    var deleteAttachment = function (blogPosts, post, attachmentIndex, cb) {
+      var postIndex = blogPosts.indexOf(post);
+      $log.debug("[NewsController.deleteAttachment]", blogPosts[postIndex], attachmentIndex);
+      if(blogPosts[postIndex].attachments[attachmentIndex].id) {
+        deleteAttachmentExternally(blogPosts, postIndex, attachmentIndex, function (err) {
+          if(err) return cb(err);
+          deleteAttachmentLocally(blogPosts, postIndex, attachmentIndex, cb);
+        });
       } else {
-        if(cb) cb("Title not set", event);
+        deleteAttachmentLocally(blogPosts, postIndex, attachmentIndex, cb);
+      }
+    };
+
+    var validate = function (blogPost, cb) {
+      if(blogPost.title) {
+        return fix(blogPost, cb)
+      } else {
+        if(cb) cb("Title not set", blogPost);
         else return null;
       }
     }
 
-    var chooseType = function(event, type, hide) {
-      event.type = type;
+    var chooseType = function(blogPost, type, hide) {
+      blogPost.type = type;
       hide();
     };
 
-    var openTypeChooserModal = function(event) {
-      typeModal.$scope.event = event;
-      //- Show when some event occurs (use $promise property to ensure the template has been loaded)
+    var openTypeChooserModal = function(blogPost) {
+      typeModal.$scope.blogPost = blogPost;
+      //- Show when some blogPost occurs (use $promise property to ensure the template has been loaded)
       typeModal.$promise.then(typeModal.show);
     };
 
-    var setModals = function($scope) {
+    var setModals = function($scope, fileOptions) {
 
-      editModal = $modal({title: 'Ereignis bearbeiten', templateUrl: '/views/modern/events/editmodal.jade', show: false});
+      editModal = $modal({title: 'Blogpost bearbeiten', templateUrl: '/views/modern/blog/editmodal.bootstrap.jade', show: false});
       editModal.$scope.ok = false;
       editModal.$scope.accept = function (hide) {
         editModal.$scope.ok = true;
@@ -47,31 +82,61 @@ angular.module('jumplink.cms.bootstrap.blog', [
         editModal.$scope.ok = false;
         hide();
       }
-      editModal.$scope.uploader = new FileUploader({url: 'timeline/upload', removeAfterUpload: true});
+
+      // set default fileOptions
+      if(angular.isUndefined(fileOptions)) {
+        fileOptions = {
+          path: 'assets/files/blog',
+          thumbnail: {
+            width: 300,
+            path: 'assets/files/blog'
+          },
+          rescrop: {
+            width: 1200,
+            cropwidth: 1200,
+            cropheight: 1200,
+          }
+        }
+      }
+
+      var uploadOptions = {
+        url: 'blog/upload',
+        removeAfterUpload: true,
+        // WARN: headers HTML5 only
+        headers: {
+          options: JSON.stringify(fileOptions)
+        }
+      };
+
+      editModal.$scope.uploader = new FileUploader(uploadOptions);
       editModal.$scope.openTypeChooserModal = openTypeChooserModal;
 
       editModal.$scope.uploader.onCompleteItem = function(fileItem, response, status, headers) {
-        fileItem.event.download = response.files[0].uploadedAs;
+        $log.debug("fileItem", fileItem);
+        if(!angular.isArray(fileItem.blogPost.attachments)) fileItem.blogPost.attachments = [];
+        for (var i = 0; i < response.files.length; i++) {
+          fileItem.blogPost.attachments.push(response.files[i]);
+        };
       };
 
       editModal.$scope.uploader.onProgressItem = function(fileItem, progress) {
         console.info('onProgressItem', fileItem, progress);
       };
 
-      editModal.$scope.upload = function(fileItem, event) {
-        fileItem.event = event;
+      editModal.$scope.upload = function(fileItem, blogPost) {
+        fileItem.blogPost = blogPost;
         fileItem.upload();
       };
 
-      typeModal = $modal({title: 'Typ wählen', templateUrl: '/views/modern/events/typechoosermodal.jade', show: false});
+      typeModal = $modal({title: 'Typ wählen', templateUrl: '/views/modern/blog/typechoosermodal.bootstrap.jade', show: false});
       typeModal.$scope.chooseType = chooseType;
 
-      editModal.$scope.$on('modal.hide.before',function(event, editModal) {
-        $log.debug("edit closed", event, editModal);
+      editModal.$scope.$on('modal.hide.before',function(blogPost, editModal) {
+        $log.debug("edit closed", blogPost, editModal);
         if(editModal.$scope.ok) {
-          return validate(editModal.$scope.event, editModal.$scope.callback);
+          return validate(editModal.$scope.blogPost, editModal.$scope.callback);
         } else {
-          if(editModal.$scope.callback) editModal.$scope.callback("discarded", editModal.$scope.event);
+          if(editModal.$scope.callback) editModal.$scope.callback("discarded", editModal.$scope.blogPost);
         }
       });
 
@@ -93,104 +158,80 @@ angular.module('jumplink.cms.bootstrap.blog', [
       }
     }
 
-    var edit = function(event, eventBlockName, cb) {
-      // $log.debug("edit", event);
-      editModal.$scope.event = event;
-      // editModal.$scope.eventBlockName = eventBlockName;
+    var edit = function(blogPost, cb) {
+      $log.debug("[BlogService.edit]", blogPost);
+      editModal.$scope.blogPost = blogPost;
       editModal.$scope.callback = cb;
       editModal.$scope.ok = false;
 
-      focus('eventtitle');
-      //- Show when some event occurs (use $promise property to ensure the template has been loaded)
+      focus('blogposttitle');
+      //- Show when some blogPost occurs (use $promise property to ensure the template has been loaded)
       editModal.$promise.then(editModal.show);
     };
 
-    var split = function(events) {
-      var unknown = [], before = [], after = [];
-      for (var i = 0; i < events.length; i++) {
-
-        if(angular.isDefined(events[i].to)) {
-          events[i].to = moment(events[i].to);
-        }
-
-        if(angular.isDefined(events[i].from)) {
-          events[i].from = moment(events[i].from);
-          if(events[i].from.isAfter())
-            after.push(events[i]);
-          else
-            before.push(events[i]);
-        } else {
-          unknown.push(events[i]);
-        }
-      };
-      return {unknown:unknown, before:before, after:after};
-    }
-
-    var removeFromClient = function (events, event, eventBlockName, cb) {
-      // $log.debug("removeFromClient", event, eventBlockName);
-      var index = events[eventBlockName].indexOf(event);
+    var removeFromClient = function (blogPosts, blogPost, cb) {
+      // $log.debug("removeFromClient", blogPost);
+      var index = blogPosts.indexOf(blogPost);
       if (index > -1) {
-        events[eventBlockName].splice(index, 1);
-        if(cb) cb(null, events);
+        blogPosts.splice(index, 1);
+        if(cb) cb(null, blogPosts);
       } else {
-        if(cb) cb("no event on client site found to remove", events);
+        if(cb) cb("no blogPost on client site found to remove", blogPosts);
       }
     };
 
-    var remove = function(events, event, eventBlockName, cb) {
-      // $log.debug("remove event", event, eventBlockName);
-      if(event.id) {
-        $log.debug(event);
-        $sailsSocket.delete('/timeline/'+event.id).success(function(users, status, headers, config) {
-          removeFromClient(events, event, eventBlockName, cb);
+    var destroy = function(blogPosts, blogPost, cb) {
+      // $log.debug("remove blogPost", blogPost);
+      if(blogPost.id) {
+        $log.debug(blogPost);
+        $sailsSocket.delete('/blog/'+blogPost.id).success(function(users, status, headers, config) {
+          removeFromClient(blogPosts, blogPost, cb);
         });
       } else {
-        removeFromClient(events, event, eventBlockName, cb);
+        removeFromClient(blogPosts, blogPost, cb);
       }
     };
 
-    var transform = function(events) {
-      events = split(events);
-      events.before = UtilityService.invertOrder(events.before);
-      return events;
+    var sort = function(blogPosts) {
+      console.log("TODO");
+      blogPosts = blogPosts;
+      return blogPosts;
     }
 
-    var merge = function(unknown, before, after) {
-      if(angular.isUndefined(unknown))
-        unknown = [];
-      if(angular.isUndefined(before))
-        before = [];
-      if(angular.isUndefined(after))
-        after = [];
-      return unknown.concat(before).concat(after);
+    var transform = function(blogPosts) {
+      blogPosts = sort(blogPosts);
+      // for (var i = 0; i < blogPosts.length; i++) {
+      //   if(angular.isDefined(blogPosts[i].createdAt)) blogPosts[i].createdAt = moment(blogPosts[i].createdAt);
+      //   if(angular.isDefined(blogPosts[i].updatedAt)) blogPosts[i].updatedAt = moment(blogPosts[i].updatedAt);
+      // };
+      return blogPosts;
     }
 
-    var append = function(events, event, cb) {
-      events.unknown.push(event);
-      var allEvents = merge(events.unknown, events.before, events.after);
-      events = transform(allEvents);
-      if(cb) return cb(null, events);
-      else return events;
+    var append = function(blogPosts, blogPost, cb) {
+      blogPosts.push(blogPost);
+      blogPosts = transform(blogPosts);
+      if(cb) return cb(null, blogPosts);
+      return blogPosts;
     }
 
     var create = function(data) {
 
-      if(!data || !data.from) {
-        data.from = moment();
-        data.from.add(1, 'hours');
-        data.from.minutes(0);
-      }
+      if(!data || !data.createdAt) data.createdAt = moment();
+      // if(!data || !data.updatedAt) data.createdAt = moment();
       if(!data || !data.title) data.title = "";
-      if(!data || !data.person) data.person = "";
-      if(!data || !data.place) data.place = "";
+      if(!data || !data.content) data.content = "";
+      if(!data || !data.author) data.author = "";
       if(!data || !data.page) cb("Page not set.");
+      if(!data || !data.type) data.type = types[0]; // news
+
+      $log.debug("[BlogService,create]", data);
 
       return data;
     }
 
-    var createEdit = function(events, event, cb) {
-      var event = create(event); 
-      edit(event, null, cb);
+    var createEdit = function(blogPosts, blogPost, cb) {
+      var blogPost = create(blogPost); 
+      edit(blogPost, cb);
     };
 
     var fix = function(object, cb) {
@@ -211,32 +252,29 @@ angular.module('jumplink.cms.bootstrap.blog', [
       else return objects;
     }
 
-    var refresh = function(eventBlocks) {
-      var allEvents = merge(eventBlocks.unknown, eventBlocks.before, eventBlocks.after);
-      // $log.debug("allEvents.length", allEvents.length);
-      eventBlocks = transform(allEvents);
-      // $log.debug("refreshed");
-      return eventBlocks;
+    var refresh = function(blogPosts) {
+      blogPosts = transform(blogPosts);
+      return blogPosts;
     };
 
-    var saveOne = function (eventBlocks, eventBlockName, event, cb) {
+    var saveOne = function (blogPosts, blogPost, cb) {
       var errors = [
-        "EventService: Can't save event.",
-        "EventService: Can't save event, event to update not found.",
-        "EventService: Can't save event, parameters undefind.",
+        "BlogService: Can't save blogPost.",
+        "BlogService: Can't save blogPost, blogPost to update not found.",
+        "BlogService: Can't save blogPost, parameters undefind.",
       ]
-      if(angular.isDefined(event) && angular.isDefined(eventBlockName) && angular.isDefined(cb)) {
-        event = fix(event);
-        if(angular.isUndefined(event.id)) {
+      if(angular.isDefined(blogPost) && angular.isDefined(cb)) {
+        blogPost = fix(blogPost);
+        if(angular.isUndefined(blogPost.id)) {
           // create because id is undefined
-          $sailsSocket.post('/timeline', event).success(function(data, status, headers, config) {
+          $sailsSocket.post('/blog', blogPost).success(function(data, status, headers, config) {
             if(angular.isArray(data)) data = data[0];
-            // $log.debug("event created", event, data);
-            var index = eventBlocks[eventBlockName].indexOf(event);
+            // $log.debug("blogPost created", blogPost, data);
+            var index = blogPosts.indexOf(blogPost);
             if (index > -1) {
-              eventBlocks[eventBlockName][index] = data;
-              // $log.debug(eventBlocks[eventBlockName][index]);
-              cb(null, eventBlocks[eventBlockName][index]);
+              blogPosts[index] = data;
+              // $log.debug(blogPosts[index]);
+              cb(null, blogPosts[index]);
             } else {
               cb(errors[1]);
             }
@@ -247,11 +285,11 @@ angular.module('jumplink.cms.bootstrap.blog', [
           });
         } else {
           // update because id is defined
-          $sailsSocket.put('/timeline/'+event.id, event).success(function(data, status, headers, config) {
+          $sailsSocket.put('/blog/'+blogPost.id, blogPost).success(function(data, status, headers, config) {
             if(angular.isArray(data)) data = data[0];
-            // $log.debug("event updated", event, data);
-            event = data;
-            cb(null, event);
+            // $log.debug("blogPost updated", blogPost, data);
+            blogPost = data;
+            cb(null, blogPost);
           }).error(function (data, status, headers, config) {
             $log.error(data, status, headers, config);
             cb(errors[0]);
@@ -262,32 +300,18 @@ angular.module('jumplink.cms.bootstrap.blog', [
       }
     };
 
-    var saveAllInBlock = function(eventBlocks, eventBlockName, cb) {
-      $async.map(eventBlocks[eventBlockName], function (event, cb) {
-        saveOne(eventBlocks, eventBlockName, event, cb);
-      }, cb);
-    }
-
-
-    var saveBlocks = function(eventBlocks, cb) {
+    var saveBlocks = function(blogPosts, cb) {
       var errors = [
-        "EventService: Can't save eventBlocks, parameters undefind."
+        "[BlogService.saveBlocks] Can't save blogPosts, parameters undefind."
       ]
-      // save just this event if defined
-      if(angular.isDefined(eventBlocks) && angular.isDefined(cb)) {
-
-        $async.map(['after', 'before', 'unknown'], function (eventBlockName, cb) {
-          saveAllInBlock(eventBlocks, eventBlockName, cb);
-          // $async.map(eventBlocks[eventBlockName], function (event, cb) {
-          //   saveOne((eventBlocks, eventBlockName, event, cb);
-          // }, cb);
-        }, function(err, eventBlocksArray) {
-          if(err) cb(err);
-          else {
-            var allEvents = merge(eventBlocksArray[0], eventBlocksArray[1], eventBlocksArray[2]);
-            eventBlocks = transform(allEvents);
-            cb(null, eventBlocks);
-          }
+      // save just this blogPost if defined
+      if(angular.isDefined(blogPosts) && angular.isDefined(cb)) {
+        $async.map(blogPosts, function (blogPost, cb) {
+          saveOne(blogPosts, blogPost, cb);
+        }, function(err, blogPostsArray) {
+          if(err) return cb(err);
+          blogPosts = transform(blogPosts);
+          cb(null, blogPosts);
         });
       } else {
         if(cb) cb(errors[0]);
@@ -296,57 +320,58 @@ angular.module('jumplink.cms.bootstrap.blog', [
     };
 
     var resolve = function(page) {
-      return $sailsSocket.get('/timeline').then (function (data) {
+      return $sailsSocket.get('/blog').then (function (data) {
         // $log.debug(data);
         return transform(data.data);
       }, function error (resp){
         $log.error("Error on resolve "+page, resp);
+        return null;
       });
     };
 
     var subscribe = function () {
-      $sailsSocket.subscribe('timeline', function(msg){
+      $sailsSocket.subscribe('blog', function(msg){
         $log.debug(msg);
 
         switch(msg.verb) {
           case 'updated':
             if($rootScope.authenticated) {
-              $rootScope.pop('success', 'Ein Ereignis wurde aktualisiert', msg.data.title);
+              $rootScope.pop('success', 'Ein Blogpost wurde aktualisiert', msg.data.title);
             }
-            findEvent(msg.id, function(error, event, eventBlock, index) {
+            findEvent(msg.id, function(error, blogPost, blogPostBlock, index) {
               if(error) $log.debug(error);
-              else event = msg.data;
+              else blogPost = msg.data;
               $scope.refresh();
             });
           break;
           case 'created':
             if($rootScope.authenticated) {
-              $rootScope.pop('success', 'Ein Ereignis wurde erstellt', msg.data.title);
+              $rootScope.pop('success', 'Ein Blogpost wurde erstellt', msg.data.title);
             }
-            $scope.events['before'].push(msg.data);
+            $scope.blogPosts['before'].push(msg.data);
             $scope.refresh();
           break;
           case 'removedFrom':
             if($rootScope.authenticated) {
-              $rootScope.pop('success', 'Ein Ereignis wurde entfernt', msg.data.title);
+              $rootScope.pop('success', 'Ein Blogpost wurde entfernt', msg.data.title);
             }
-            findEvent(msg.id, function(error, event, eventBlock, index) {
+            findEvent(msg.id, function(error, blogPost, blogPostBlock, index) {
               if(error) $log.debug(error);
-              else EventService.removeFromClient($scope.events, event, eventBlock);
+              else BlogService.removeFromClient($scope.blogPosts, blogPost, blogPostBlock);
             });
           break;
           case 'destroyed':
             if($rootScope.authenticated) {
-              $rootScope.pop('success', 'Ein Ereignis wurde gelöscht', msg.data.title);
+              $rootScope.pop('success', 'Ein Blogpost wurde gelöscht', msg.data.title);
             }
-            findEvent(msg.id, function(error, event, eventBlock, index) {
+            findEvent(msg.id, function(error, blogPost, blogPostBlock, index) {
               if(error) $log.debug(error);
-              else EventService.removeFromClient($scope.events, event, eventBlock);
+              else BlogService.removeFromClient($scope.blogPosts, blogPost, blogPostBlock);
             });
           break;
           case 'addedTo':
             if($rootScope.authenticated) {
-              $rootScope.pop('success', 'Ein Ereignis wurde hinzugefügt', msg.data.title);
+              $rootScope.pop('success', 'Ein Blogpost wurde hinzugefügt', msg.data.title);
             }
           break;
         }
@@ -355,14 +380,13 @@ angular.module('jumplink.cms.bootstrap.blog', [
 
     return {
       subscribe: subscribe,
-      split: split,
-      merge: merge,
       append: append,
+      sort: sort,
       transform: transform,
       saveOne: saveOne,
-      saveAllInBlock: saveAllInBlock,
       saveBlocks: saveBlocks,
       edit: edit,
+      update: edit, // alias
       createEdit: createEdit,
       fixEach: fixEach,
       resolve: resolve,
@@ -371,7 +395,10 @@ angular.module('jumplink.cms.bootstrap.blog', [
       openTypeChooserModal: openTypeChooserModal,
       chooseType: chooseType,
       removeFromClient: removeFromClient,
-      remove: remove
+      remove: destroy, // alias
+      destroy: destroy,
+      deleteAttachment: deleteAttachment,
+      destroyAttachment: deleteAttachment, // alias
     };
   });
 

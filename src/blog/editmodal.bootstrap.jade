@@ -18,7 +18,7 @@
           .input-group
             .input-group-addon
               i.fa.fa-paragraph
-            textarea#blogpostcontent.form-control(type='text', name="content", ng-model="blogPost.content", placeholder='Inhalt eingeben')
+            .textarea.form-control#blogpostcontent(type='text', medium-editor, name="content", ng-model="blogPost.content", placeholder='Inhalt eingeben')
         .form-group
           label(for='author') Author
           .input-group

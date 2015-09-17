@@ -62,6 +62,23 @@ angular.module('jumplink.cms.gallery', [
     }
 
     var setUploadModal = function($scope, imageBlocks, contentBlocks, options, cb) {
+
+      // if options not set, set to default values
+      if(angular.isUndefined(options)) {
+        options = {
+          path: 'assets/files/gallery',
+          thumbnail: {
+            width: 300,
+            path: 'assets/files/gallery'
+          },
+          rescrop: {
+            width: 1200,
+            cropwidth: 1200,
+            cropheight: 1200,
+          }
+        }
+      }
+
       var uploadOptions = {
         url: 'gallery/upload',
         removeAfterUpload: true,

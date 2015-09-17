@@ -6,12 +6,6 @@ angular.module('jumplink.cms.content', [
     'jumplink.cms.sortable',
     'ngFocus'
   ])
-
-  .value('mediumOptions', {
-    "buttonLabels": "fontawesome",
-    "buttons": ["bold", "italic", "underline", "anchor", "header1" , "header2", "quote", "orderedlist", "unorderedlist"]
-  })
-
   .service('ContentService', function ($rootScope, $log, $sailsSocket, $filter, $modal, SortableService, UtilityService, focus) {
 
     var showHtml = false;
@@ -459,22 +453,4 @@ angular.module('jumplink.cms.content', [
       getByName: getByName
     };
   })
-
-  .directive('jlContent', function ($compile, $window, mediumOptions) {
-
-    return {
-      restrict: 'E',
-      templateUrl: '/views/modern/content.jade',
-      scope: {
-        authenticated : "=",
-        html: "=",
-        content: "=",
-      },
-      link: function ($scope, $element, $attrs) {
-        $scope.mediumOptions = mediumOptions;
-        
-      }
-    };
-  })
-
 ;

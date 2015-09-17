@@ -35,7 +35,7 @@ angular.module('jumplink.cms.blog', [
       typeModal.$promise.then(typeModal.show);
     };
 
-    var setModals = function($scope) {
+    var setModals = function($scope, fileOptions) {
 
       editModal = $modal({title: 'Blogpost bearbeiten', templateUrl: '/views/modern/blog/editmodal.bootstrap.jade', show: false});
       editModal.$scope.ok = false;
@@ -47,11 +47,41 @@ angular.module('jumplink.cms.blog', [
         editModal.$scope.ok = false;
         hide();
       }
-      editModal.$scope.uploader = new FileUploader({url: 'blog/upload', removeAfterUpload: true});
+
+      // set default fileOptions
+      if(angular.isUndefined(fileOptions)) {
+        fileOptions = {
+          path: 'assets/files/blog',
+          thumbnail: {
+            width: 300,
+            path: 'assets/files/blog'
+          },
+          rescrop: {
+            width: 1200,
+            cropwidth: 1200,
+            cropheight: 1200,
+          }
+        }
+      }
+
+      var uploadOptions = {
+        url: 'blog/upload',
+        removeAfterUpload: true,
+        // WARN: headers HTML5 only
+        headers: {
+          options: JSON.stringify(fileOptions)
+        }
+      };
+
+      editModal.$scope.uploader = new FileUploader(uploadOptions);
       editModal.$scope.openTypeChooserModal = openTypeChooserModal;
 
       editModal.$scope.uploader.onCompleteItem = function(fileItem, response, status, headers) {
-        fileItem.blogPost.download = response.files[0].uploadedAs;
+        $log.debug("fileItem", fileItem);
+        if(!angular.isArray(fileItem.blogPost.attachments)) fileItem.blogPost.attachments = [];
+        for (var i = 0; i < response.files.length; i++) {
+          fileItem.blogPost.attachments.push(response.files[i]);
+        };
       };
 
       editModal.$scope.uploader.onProgressItem = function(fileItem, progress) {
