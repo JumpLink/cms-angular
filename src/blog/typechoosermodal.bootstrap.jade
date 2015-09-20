@@ -5,14 +5,14 @@
         button.close(type='button', ng-click='$hide()') ×
         h4.modal-title(ng-bind='title')
       .modal-body
-        .media(ng-click="chooseType(blogPost, 'news', $hide)")
+        .media(ng-click="chooseType(blogPost, 'news');$hide();")
           a.pull-left
             .timeline-badge.success
               i.fa.fa-newspaper-o
           .media-body
             h4.media-heading News
             | Blogposts die als News fungieren
-        .media(ng-click="chooseType(blogPost, 'other', $hide)")
+        .media(ng-click="chooseType(blogPost, 'other');$hide();")
           a.pull-left
             .timeline-badge
               i.fa.fa-question

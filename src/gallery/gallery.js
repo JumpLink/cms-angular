@@ -99,7 +99,7 @@ angular.module('jumplink.cms.gallery', [
 
       $scope.uploader.onCompleteItem = function(fileItem, response, status, headers) {
         //fileItem.member.image = response.files[0].uploadedAs;
-        // $log.debug(fileItem, response, status, headers);
+        $log.debug("[GalleryService.uploader.onCompleteItem]",fileItem, response, status, headers);
         // WORKAROUND until the socket method works
         response.files.forEach(function (file, index, files) {
 
