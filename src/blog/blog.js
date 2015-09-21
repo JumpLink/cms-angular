@@ -138,27 +138,20 @@ angular.module('jumplink.cms.blog', [
     return blogPosts;
   };
 
-  var saveOne = function (blogPosts, blogPost, page, cb) {
+  var saveOne = function (blogPosts, blogPost, index, page, cb) {
     var errors = [
       "BlogService: Can't save blogPost.",
       "BlogService: Can't save blogPost, blogPost to update not found.",
       "BlogService: Can't save blogPost, parameters undefind.",
     ]
+    $log.debug("[BlogService.saveOne]", blogPost)
     if(angular.isDefined(blogPost) && angular.isDefined(cb)) {
       blogPost = fix(blogPost, page);
       if(angular.isUndefined(blogPost.id)) {
         // create because id is undefined
         $sailsSocket.post('/blog', blogPost).success(function(data, status, headers, config) {
           if(angular.isArray(data)) data = data[0];
-          // $log.debug("blogPost created", blogPost, data);
-          var index = blogPosts.indexOf(blogPost);
-          if (index > -1) {
-            blogPosts[index] = data;
-            // $log.debug(blogPosts[index]);
-            cb(null, blogPosts[index]);
-          } else {
-            cb(errors[1]);
-          }
+          cb(null, data);
         }).error(function (data, status, headers, config) {
           if(angular.isArray(data)) data = data[0];
           $log.error(data, status, headers, config);
@@ -168,9 +161,7 @@ angular.module('jumplink.cms.blog', [
         // update because id is defined
         $sailsSocket.put('/blog/'+blogPost.id, blogPost).success(function(data, status, headers, config) {
           if(angular.isArray(data)) data = data[0];
-          // $log.debug("blogPost updated", blogPost, data);
-          blogPost = data;
-          cb(null, blogPost);
+          cb(null, data);
         }).error(function (data, status, headers, config) {
           $log.error(data, status, headers, config);
           cb(errors[0]);
@@ -188,7 +179,7 @@ angular.module('jumplink.cms.blog', [
     // save just this blogPost if defined
     if(angular.isDefined(blogPosts) && angular.isDefined(cb)) {
       $async.map(blogPosts, function (blogPost, cb) {
-        saveOne(blogPosts, blogPost, page, cb);
+        saveOne(blogPosts, blogPost, null, page, cb);
       }, function(err, blogPostsArray) {
         if(err) return cb(err);
         blogPosts = transform(blogPosts);
@@ -197,6 +188,15 @@ angular.module('jumplink.cms.blog', [
     } else {
       if(cb) cb(errors[0]);
       else $log.error(errors[0]);
+    }
+  };
+
+  var save = function(blogPosts, blogPost, index, page, callback) {
+    // save just this blogPost if defined
+    if(angular.isDefined(blogPost)) {
+      saveOne(blogPosts, blogPost, index, page, callback);
+    } else { // save all blogPostBlocks
+      saveBlocks(blogPosts, page, callback);
     }
   };
 
@@ -267,6 +267,7 @@ angular.module('jumplink.cms.blog', [
     transform: transform,
     saveOne: saveOne,
     saveBlocks: saveBlocks,
+    save: save,
     fixEach: fixEach,
     resolve: resolve,
     refresh: refresh,
@@ -276,5 +277,6 @@ angular.module('jumplink.cms.blog', [
     destroy: destroy,
     deleteAttachment: deleteAttachment,
     destroyAttachment: deleteAttachment, // alias
+    create: create
   };
 });

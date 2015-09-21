@@ -10,6 +10,8 @@ angular.module('jumplink.cms.bootstrap.blog', [
 
   var editModal = null;
   var typeModal = null;
+  var page = null;
+
 
   var openTypeChooserModal = function(blogPost) {
     typeModal.$scope.blogPost = blogPost;
@@ -17,7 +19,9 @@ angular.module('jumplink.cms.bootstrap.blog', [
     typeModal.$promise.then(typeModal.show);
   };
 
-  var setModals = function($scope, fileOptions) {
+  var setModals = function($scope, fileOptions, pageString) {
+
+    page = pageString;
 
     editModal = $modal({title: 'Blogpost bearbeiten', templateUrl: '/views/modern/blog/editmodal.bootstrap.jade', show: false});
     editModal.$scope.ok = false;
@@ -78,10 +82,13 @@ angular.module('jumplink.cms.bootstrap.blog', [
     typeModal = $modal({title: 'Typ wählen', templateUrl: '/views/modern/blog/typechoosermodal.bootstrap.jade', show: false});
     typeModal.$scope.chooseType = BlogService.chooseType;
 
-    editModal.$scope.$on('modal.hide.before',function(blogPost, editModal) {
-      $log.debug("edit closed", blogPost, editModal);
+    editModal.$scope.$on('modal.hide.before',function(modalEvent, editModal) {
+      $log.debug("edit closed", editModal.$scope.blogPost, editModal);
       if(editModal.$scope.ok) {
-        return BlogService.validate(editModal.$scope.blogPost, null, editModal.$scope.callback);
+        BlogService.saveOne(null, editModal.$scope.blogPost, null, page, function (err, result) {
+          editModal.$scope.blogPost = result
+          return BlogService.validate(editModal.$scope.blogPost, null, editModal.$scope.callback);
+        });
       } else {
         if(editModal.$scope.callback) editModal.$scope.callback("discarded", editModal.$scope.blogPost);
       }
