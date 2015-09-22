@@ -63,7 +63,7 @@ angular.module('jumplink.cms.bootstrap.blog', [
     editModal.$scope.openTypeChooserModal = openTypeChooserModal;
 
     editModal.$scope.uploader.onCompleteItem = function(fileItem, response, status, headers) {
-      $log.debug("fileItem", fileItem);
+      $log.debug("[BlogBootstrapService.onCompleteItem] fileItem", fileItem, "response", response);
       if(!angular.isArray(fileItem.blogPost.attachments)) fileItem.blogPost.attachments = [];
       for (var i = 0; i < response.files.length; i++) {
         fileItem.blogPost.attachments.push(response.files[i]);
@@ -71,7 +71,7 @@ angular.module('jumplink.cms.bootstrap.blog', [
     };
 
     editModal.$scope.uploader.onProgressItem = function(fileItem, progress) {
-      console.info('onProgressItem', fileItem, progress);
+      $log.debug('[BlogBootstrapService.onProgressItem]', fileItem, progress);
     };
 
     editModal.$scope.upload = function(fileItem, blogPost) {
@@ -85,10 +85,11 @@ angular.module('jumplink.cms.bootstrap.blog', [
     editModal.$scope.$on('modal.hide.before',function(modalEvent, editModal) {
       $log.debug("edit closed", editModal.$scope.blogPost, editModal);
       if(editModal.$scope.ok) {
-        BlogService.saveOne(null, editModal.$scope.blogPost, null, page, function (err, result) {
-          editModal.$scope.blogPost = result
-          return BlogService.validate(editModal.$scope.blogPost, null, editModal.$scope.callback);
-        });
+        // BlogService.saveOne(null, editModal.$scope.blogPost, null, page, function (err, result) {
+        //   editModal.$scope.blogPost = result
+        //   return BlogService.validate(editModal.$scope.blogPost, null, editModal.$scope.callback);
+        // });
+        return BlogService.validate(editModal.$scope.blogPost, null, editModal.$scope.callback);
       } else {
         if(editModal.$scope.callback) editModal.$scope.callback("discarded", editModal.$scope.blogPost);
       }

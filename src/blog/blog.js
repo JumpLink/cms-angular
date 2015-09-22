@@ -1,43 +1,25 @@
 angular.module('jumplink.cms.blog', [
-  'jumplink.cms.blog',
+  'jumplink.cms.attachment',
   'angularMoment',
   'ngAsync',
   'sails.io',
 ])
 
-.service('BlogService', function (moment, $sailsSocket, $async, $log) {
+.service('BlogService', function (moment, $sailsSocket, $async, $log, AttachmentService) {
 
   var types = ['news', 'other'];
 
   /**
    * delete attachment on local / client / browser
    */
-  var deleteAttachmentLocally = function (blogPosts, postIndex, attachmentIndex, cb) {
-    if(blogPosts[postIndex].attachments.length > 0) return blogPosts[postIndex].attachments.splice(attachmentIndex, 1);
-  };
+  var deleteAttachmentLocally = AttachmentService.destroyLocally;
 
   /**
    * delete attachment extern / server
    */
-  var deleteAttachmentExternally = function (blogPosts, postIndex, attachmentIndex, cb) {
-    $sailsSocket.post('/blog/deleteAttachment/', {blogPostID: blogPosts[postIndex].id, attachmentUploadedAs: blogPosts[postIndex].attachments[attachmentIndex].uploadedAs})
-    .success(function (data, status, headers, config) {
-      $log.debug(null, data, status, headers, config);
-      cb();
-    })
-    .error(function (data, status, headers, config) {
-      $log.error(data, status, headers, config);
-      cb("error", data, status, headers, config);
-    });
-  };
+  var deleteAttachmentExternally = AttachmentService.destroyExternally;
 
-  var deleteAttachment = function (blogPosts, post, attachmentIndex, cb) {
-    var postIndex = blogPosts.indexOf(post);
-    $log.debug("[NewsController.deleteAttachment]", blogPosts[postIndex], attachmentIndex);
-    return deleteAttachmentExternally(blogPosts, postIndex, attachmentIndex, function (error, data) {
-      return deleteAttachmentLocally(blogPosts, postIndex, attachmentIndex, cb);
-    });
-  };
+  var deleteAttachment = AttachmentService.destroy;
 
   var validate = function (blogPost, page, cb) {
     if(blogPost.title) {
@@ -201,7 +183,7 @@ angular.module('jumplink.cms.blog', [
   };
 
   var resolve = function(page) {
-    return $sailsSocket.get('/blog', {page:page}).then (function (data) {
+    return $sailsSocket.put('/blog/find', {page:page}).then (function (data) {
       // $log.debug(data);
       return transform(data.data);
     }, function error (resp){
