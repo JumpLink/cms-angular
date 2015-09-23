@@ -5,7 +5,7 @@ angular.module('jumplink.cms.blog', [
   'sails.io',
 ])
 
-.service('BlogService', function (moment, $sailsSocket, $async, $log, AttachmentService) {
+.service('BlogService', function (moment, $sailsSocket, $async, $log, $filter, AttachmentService) {
 
   var types = ['news', 'other'];
 
@@ -58,22 +58,24 @@ angular.module('jumplink.cms.blog', [
   };
 
   var sort = function(blogPosts) {
-    console.log("TODO");
-    blogPosts = blogPosts;
-    return blogPosts;
+    var reverse = true;
+    return $filter('orderBy')(blogPosts, 'createdAt', reverse);
   }
 
   var transform = function(blogPosts) {
     blogPosts = sort(blogPosts);
-    // for (var i = 0; i < blogPosts.length; i++) {
-    //   if(angular.isDefined(blogPosts[i].createdAt)) blogPosts[i].createdAt = moment(blogPosts[i].createdAt);
-    //   if(angular.isDefined(blogPosts[i].updatedAt)) blogPosts[i].updatedAt = moment(blogPosts[i].updatedAt);
-    // };
     return blogPosts;
   }
 
-  var append = function(blogPosts, blogPost, cb) {
-    blogPosts.push(blogPost);
+  var append = function(blogPosts, moreBlogPosts, cb) {
+    blogPosts.push.apply(blogPosts, moreBlogPosts);
+    blogPosts = transform(blogPosts);
+    if(cb) return cb(null, blogPosts);
+    return blogPosts;
+  }
+
+  var prepent = function(blogPosts, blogPost, cb) {
+    blogPosts.unshift(blogPost);
     blogPosts = transform(blogPosts);
     if(cb) return cb(null, blogPosts);
     return blogPosts;
@@ -182,12 +184,26 @@ angular.module('jumplink.cms.blog', [
     }
   };
 
-  var resolve = function(page) {
-    return $sailsSocket.put('/blog/find', {page:page}).then (function (data) {
+  var find = function(page, limit, skip, cb) {
+    return $sailsSocket.put('/blog/find', {page:page, limit:limit, skip:skip}).then (function (data) {
+      data.data = transform(data.data);
+      if(angular.isFunction(cb)) return cb(null, data.data);
+      return data.data
+    }, function error (resp){
+      $log.error("Error on find "+page, resp);
+      if(angular.isFunction(cb)) return cb(resp);
+      return null;
+    });
+  };
+
+  var count = function(page, limit, skip, cb) {
+    return $sailsSocket.put('/blog/count', {page:page}).then (function (data) {
       // $log.debug(data);
-      return transform(data.data);
+      if(angular.isFunction(cb)) return cb(null, data.data.count);
+      return data.data.count;
     }, function error (resp){
       $log.error("Error on resolve "+page, resp);
+      if(angular.isFunction(cb)) return cb(resp);
       return null;
     });
   };
@@ -245,13 +261,16 @@ angular.module('jumplink.cms.blog', [
     validate: validate,
     subscribe: subscribe,
     append: append,
+    prepent: prepent,
     sort: sort,
     transform: transform,
     saveOne: saveOne,
     saveBlocks: saveBlocks,
     save: save,
     fixEach: fixEach,
-    resolve: resolve,
+    find: find,
+    resolve: find, // alias
+    count: count,
     refresh: refresh,
     chooseType: chooseType,
     removeFromClient: removeFromClient,

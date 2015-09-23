@@ -1,5 +1,5 @@
 .attachment
-  a.attachment-link(target="_blank", ng-href="{{path + '/' + attachment.uploadedAs}}")
+  a.attachment-link(ng-href="{{path + '/' + attachment.uploadedAs}}")
     img.img-responsive.img-thumbnail(ng-class="{'img-center':centerImage}", ng-if="attachment.isImage || attachment.hasPreview", ng-src="{{path + '/' + attachment.thumb.name}}", title="{{attachment.filename}}")
     div.attachment-placeholder.img-thumbnail(ng-if="!attachment.isImage && !attachment.hasPreview", title="{{attachment.filename}}")
       .fa.fa-table(ng-if="attachment.hasTableIcon")

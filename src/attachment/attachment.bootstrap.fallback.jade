@@ -1,0 +1,21 @@
+.attachment
+  a.attachment-link(href="#{path + '/' + attachment.uploadedAs}")
+    if attachment.isImage || attachment.hasPreview
+      img.img-responsive.img-thumbnail(class= centerImage ? "img-center" : "", src="#{path + '/' + attachment.thumb.name}", title="#{attachment.filename}")
+    if !attachment.isImage && !attachment.hasPreview
+      div.attachment-placeholder.img-thumbnail(title="#{attachment.filename}")
+        if attachment.hasTableIcon
+          .fa.fa-table
+        if attachment.hasTextIcon
+          .fa.fa-file-text(ng-if="attachment.hasTextIcon")
+        if attachment.hasCodeIcon
+          .fa.fa-code(ng-if="attachment.hasCodeIcon")
+        if attachment.hasVideoIcon
+          .fa.fa-file-video-o(ng-if="attachment.hasVideoIcon")
+        if attachment.hasAudioIcon
+          .fa.fa-file-audio-o(ng-if="attachment.hasAudioIcon")
+        if attachment.hasApplicationIcon
+          .fa.fa-file(ng-if="attachment.hasApplicationIcon")
+        if attachment.hasUnknownIcon
+          .fa.fa-paperclip(ng-if="attachment.hasUnknownIcon")
+  .clearfix
