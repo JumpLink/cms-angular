@@ -16,7 +16,7 @@ angular.module('jumplink.cms.attachment', [
    * delete attachment extern / server
    */
   var destroyExternally = function (blogPosts, postIndex, attachmentIndex, cb) {
-    $sailsSocket.post('/blog/destroy/', {blogPostID: blogPosts[postIndex].id, attachmentUploadedAs: blogPosts[postIndex].attachments[attachmentIndex].uploadedAs})
+    $sailsSocket.put('/blog/destroyAttachment', {blogPostID: blogPosts[postIndex].id, attachmentUploadedAs: blogPosts[postIndex].attachments[attachmentIndex].uploadedAs})
     .success(function (data, status, headers, config) {
       $log.debug(null, data, status, headers, config);
       cb();
@@ -31,7 +31,7 @@ angular.module('jumplink.cms.attachment', [
     var postIndex = blogPosts.indexOf(post);
     $log.debug("[BlogService.destroy]", blogPosts[postIndex], attachmentIndex);
     return destroyExternally(blogPosts, postIndex, attachmentIndex, function (err, data, status, headers, config) {
-      if(err) $log.error("[BlogService.destroy.destroyExternally]", err, data, status, headers, config);
+      if(err) return cb(err, data, status, headers, config);
       return destroyLocally(blogPosts, postIndex, attachmentIndex, cb);
     });
   };
