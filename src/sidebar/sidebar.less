@@ -1,21 +1,176 @@
 @import "./../../../bootstrap-additions/src/aside/aside";
 
-// custom sidebar for sidebar in aside
-.aside-content {
-  .aside-body.bs-sidebar {
-    float:right;
-    width: 100%;
-    margin: 0;
-    .bs-sidenav {
+
+.aside {
+  // aside brand primary color
+  &.aside-primary {
+    .aside-dialog {
+      .aside-header {
+        background-color: @brand-primary;
+        color: @white;
+        .aside-title {
+          color: @white;
+        }
+      }
+    }
+    .bs-sidebar {
+      .nav {
+        >li {
+          >a {
+            &:hover, &:focus {
+              color: @brand-primary;
+              border-color: @brand-primary;
+            }
+          }
+        }
+        >.active:focus>a,
+        >.active:hover>a,
+        >.active>a {
+          color: @brand-primary;
+          border-color: @brand-primary;
+        }
+      }
+    }
+  }
+  // aside brand success color
+  &.aside-info {
+    .aside-dialog {
+      .aside-header {
+        background-color: @brand-info;
+        color: @white;
+        .aside-title {
+          color: @white;
+        }
+      }
+    }
+    .bs-sidebar {
+      .nav {
+        >li {
+          >a {
+            &:hover, &:focus {
+              color: @brand-info;
+              border-color: @brand-info;
+            }
+          }
+        }
+        >.active:focus>a,
+        >.active:hover>a,
+        >.active>a {
+          color: @brand-info;
+          border-color: @brand-info;
+        }
+      }
+    }
+  }
+  // aside brand success color
+  &.aside-success {
+    .aside-dialog {
+      .aside-header {
+        background-color: @brand-success;
+        color: @white;
+        .aside-title {
+          color: @white;
+        }
+      }
+    }
+    .bs-sidebar {
+      .nav {
+        >li {
+          >a {
+            &:hover, &:focus {
+              color: @brand-success;
+              border-color: @brand-success;
+            }
+          }
+        }
+        >.active:focus>a,
+        >.active:hover>a,
+        >.active>a {
+          color: @brand-success;
+          border-color: @brand-success;
+        }
+      }
+    }
+  }
+  // aside brand warning color
+  &.aside-warning {
+    .aside-dialog {
+      .aside-header {
+        background-color: @brand-warning;
+        color: @white;
+        .aside-title {
+          color: @white;
+        }
+      }
+    }
+    .bs-sidebar {
+      .nav {
+        >li {
+          >a {
+            &:hover, &:focus {
+              color: @brand-warning;
+              border-color: @brand-warning;
+            }
+          }
+        }
+        >.active:focus>a,
+        >.active:hover>a,
+        >.active>a {
+          color: @brand-warning;
+          border-color: @brand-warning;
+        }
+      }
+    }
+  }
+  // aside brand danger color
+  &.aside-danger {
+    .aside-dialog {
+      .aside-header {
+        background-color: @brand-danger;
+        color: @white;
+        .aside-title {
+          color: @white;
+        }
+      }
+    }
+    .bs-sidebar {
+      .nav {
+        >li {
+          >a {
+            &:hover, &:focus {
+              color: @brand-danger;
+              border-color: @brand-danger;
+            }
+          }
+        }
+        >.active:focus>a,
+        >.active:hover>a,
+        >.active>a {
+          color: @brand-danger;
+          border-color: @brand-danger;
+        }
+      }
+    }
+  }
+  // custom sidebar for sidebar in aside
+  .aside-content {
+    .aside-body.bs-sidebar {
+      float:right;
       width: 100%;
       margin: 0;
+      .bs-sidenav {
+        width: 100%;
+        margin: 0;
+      }
     }
+  }
+
+  .aside-title {
+    text-align: left;
   }
 }
 
-.aside-title {
-  text-align: left;
-}
+
 
 .bs-sidebar {
   margin-top: 40px;

@@ -299,21 +299,18 @@ angular.module('jumplink.cms.content', [
       });
     }
 
-    var resolveOne = function(page, name, type, cb, next) {
+    var findOne = function(page, name, type, cb, next) {
       var errors = [
-        "Error: On trying to resolve one with page: "+page+", name: "+name,
+        "Error: On trying to find one with page: "+page+", name: "+name,
         "request has more than one results"
       ];
       var query = {
         page: page,
         name: name
       };
-      var url = '/content?name='+name+'&page='+page;
-      if(type) {
-        query.type = type;
-        url = url+'&type='+type;
-      }
-      return $sailsSocket.get(url, query).then (function (data) {
+      var url = '/content/find';
+      if(type) query.type = type;
+      return $sailsSocket.put(url, query).then (function (data) {
         if(angular.isUndefined(data) || angular.isUndefined(data.data)) {
           return null;
         } else {
@@ -334,20 +331,17 @@ angular.module('jumplink.cms.content', [
       });
     };
 
-    var resolveAll = function(page, type, cb, next) {
+    var findAll = function(page, type, cb, next) {
       var errors = [
-        "Error: On trying to resolve all with page: "+page+" and type: "+type,
-        "Warn: On trying to resolve all "+page+" contents! Not found, content is empty!"
+        "Error: On trying to find all with page: "+page+" and type: "+type,
+        "Warn: On trying to find all "+page+" contents! Not found, content is empty!"
       ];
       var query = {
         page: page,
       };
-      var url = '/content/findall?page='+page;
-      if(type) {
-        query.type = type;
-        url = url+'&type='+type;
-      }
-      return $sailsSocket.get(url, query).then (function (data) {
+      var url = '/content/findall';
+      if(type) query.type = type;
+      return $sailsSocket.put(url, query).then (function (data) {
         if(angular.isUndefined(data) || angular.isUndefined(data.data)) {
           $log.warn(errors[1]);
           return null;
@@ -372,11 +366,11 @@ angular.module('jumplink.cms.content', [
     /*
      * get all contents for page including images for each content.name 
      */
-    var resolveAllWithImage = function(page, type, cb, next) {
-      // $log.debug("resolveAllWithImage");
+    var findAllWithImage = function(page, type, cb, next) {
+      // $log.debug("findAllWithImage");
       var errors = [
-        "Error: On trying to resolve all with page: "+page+" and type: "+type,
-        "Warn: On trying to resolve all "+page+" contents! Not found, content is empty!"
+        "Error: On trying to find all with page: "+page+" and type: "+type,
+        "Warn: On trying to find all "+page+" contents! Not found, content is empty!"
       ];
       var query = {
         page: page
@@ -415,13 +409,13 @@ angular.module('jumplink.cms.content', [
      * use next to transform the result before you get it back
      * use cb if you want not use promise
      */
-    var resolve = function(page, name, type, cb, next) {
+    var find = function(page, name, type, cb, next) {
       //- get soecial content (one)
       if(angular.isDefined(name)) {
-        return resolveOne(page, name, type, next);
+        return findOne(page, name, type, next);
       // get all for page
       } else {
-        return resolveAll(page, type, cb, next);
+        return findAll(page, type, cb, next);
       }
     };
 
@@ -446,10 +440,14 @@ angular.module('jumplink.cms.content', [
       fixEach: fixEach,
       save: save,
       saveOne: saveOne,
-      resolve: resolve,
-      resolveAll: resolveAll,
-      resolveOne: resolveOne,
-      resolveAllWithImage: resolveAllWithImage,
+      find: find,
+      resolve: find, // alias
+      findOne: findOne,
+      resolveOne: findOne, // alias
+      findAll: findAll, 
+      resolveAll: findAll, //alias
+      findAllWithImage: findAllWithImage,
+      resolveAllWithImage: findAllWithImage,  //alias
       getByName: getByName
     };
   })

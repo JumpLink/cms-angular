@@ -1,7 +1,7 @@
 angular.module('jumplink.cms.toolbar', [
   ])
 
-  .directive('jltoolbar', function ($compile, $window) {
+  .directive('jlToolbar', function ($compile, $window) {
 
     return {
       restrict: 'E',
