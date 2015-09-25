@@ -10,7 +10,7 @@ angular.module('jumplink.cms.session', [
       var options = {
         method: 'post',
         resultIsArray: false
-      }
+      };
       return JLSailsService.resolve('/session/create', user, options, callback);
     };
 
@@ -19,7 +19,7 @@ angular.module('jumplink.cms.session', [
       var options = {
         method: 'post',
         resultIsArray: false
-      }
+      };
       return JLSailsService.resolve('/session/destroy', user, options, callback);
     };
 

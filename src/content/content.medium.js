@@ -23,7 +23,7 @@ angular.module('jumplink.cms.content.medium', [
       //   elementTagName: 'mark',
       //   normalize: true
       // });
-    }
+    };
     Imager.prototype.onClick = function() {
       this.classApplier.toggleSelection();
     };
@@ -31,7 +31,7 @@ angular.module('jumplink.cms.content.medium', [
       return this.button;
     };
     Imager.prototype.checkState = function(node) {
-      if (node.tagName == 'MARK') {
+      if (node.tagName === 'MARK') {
         this.button.classList.add('medium-editor-button-active');
       }
     };
@@ -40,7 +40,6 @@ angular.module('jumplink.cms.content.medium', [
       Imager: Imager
     };
   })
-
   .directive('jlContent', function ($compile, $window, mediumOptions, ContentMediumService) {
 
     return {
@@ -54,7 +53,9 @@ angular.module('jumplink.cms.content.medium', [
         mediumBindOptions: "=",
       },
       link: function ($scope, $element, $attrs) {
-        if(angular.isUndefined($scope.mediumOptions)) $scope.mediumOptions = mediumOptions;
+        if(angular.isUndefined($scope.mediumOptions)) {
+          $scope.mediumOptions = mediumOptions;
+        }
         if(angular.isUndefined($scope.mediumBindOptions)) {
           $scope.mediumBindOptions = {
             extensions: {

@@ -1,15 +1,13 @@
 angular.module('jumplink.cms.utilities', [
-
   ])
-
   .service('UtilityService', function ($log) {
     var invertOrder = function (array) {
       var result = [];
       for (var i = array.length - 1; i >= 0; i--) {
         result.push(array[i]);
-      };
+      }
       return result;
-    }
+    };
 
     /**
      * find value by key in array
@@ -21,9 +19,9 @@ angular.module('jumplink.cms.utilities', [
         if(objects[i][key] === value) {
           index = i;
         } 
-      };
+      }
       return index;
-    }
+    };
 
     /**
      * Capitalize the first character of a string, but not change the case of any of the other letters.
@@ -32,13 +30,11 @@ angular.module('jumplink.cms.utilities', [
      */
     var capitalizeFirstLetter = function (string) {
       return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-    }
+    };
 
     return {
       invertOrder: invertOrder,
       findKeyValue: findKeyValue,
       capitalizeFirstLetter: capitalizeFirstLetter
     };
-  })
-  
-;
+  });

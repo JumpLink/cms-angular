@@ -19,4 +19,4 @@ angular.module('jumplink.cms.bootstrap.attachment', [
       console.log("[jlAttachmentBootstrap.link]", $scope);
     }
   };
-})
+});

@@ -9,7 +9,6 @@ angular.module('jumplink.cms.admin', [
       templateUrl: '/views/modern/adminbar.jade',
       scope: {
         download : "=?",
-        refresh: "=?",
         toogleHtml: "=?",
         refresh: "=?",
         save: "=?",

@@ -8,7 +8,9 @@ angular.module('jumplink.cms.attachment', [
    * delete attachment on local / client / browser
    */
   var destroyLocally = function (blogPosts, postIndex, attachmentIndex, cb) {
-    if(blogPosts[postIndex].attachments.length > 0) blogPosts[postIndex].attachments.splice(attachmentIndex, 1);
+    if(blogPosts[postIndex].attachments.length > 0) {
+      blogPosts[postIndex].attachments.splice(attachmentIndex, 1);
+    }
     return cb(null, blogPosts, postIndex, attachmentIndex);
   };
 
@@ -31,7 +33,9 @@ angular.module('jumplink.cms.attachment', [
     var postIndex = blogPosts.indexOf(post);
     $log.debug("[BlogService.destroy]", blogPosts[postIndex], attachmentIndex);
     return destroyExternally(blogPosts, postIndex, attachmentIndex, function (err, data, status, headers, config) {
-      if(err) return cb(err, data, status, headers, config);
+      if(err) {
+        return cb(err, data, status, headers, config);
+      }
       return destroyLocally(blogPosts, postIndex, attachmentIndex, cb);
     });
   };

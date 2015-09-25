@@ -13,7 +13,7 @@ angular.module('jumplink.cms.content', [
 
     var getShowHtml = function() {
       return showHtml;
-    }
+    };
 
     var setEditModal = function($scope) {
       editModal = $modal({title: 'Inhaltsblock bearbeiten', templateUrl: '/views/modern/contentmodal.jade', show: false});
@@ -25,12 +25,14 @@ angular.module('jumplink.cms.content', [
       editModal.$scope.abort = function (hide) {
         editModal.$scope.ok = false;
         hide();
-      }
+      };
       editModal.$scope.changeName = false;
 
       editModal.$scope.$watch('content.title', function(newValue, oldValue) {
         // $log.debug("Content in Content Modal changed!", "new", newValue, "old", oldValue);
-        if(editModal.$scope.changeName && angular.isDefined(editModal.$scope.content)) editModal.$scope.content.name = generateName(newValue);
+        if(editModal.$scope.changeName && angular.isDefined(editModal.$scope.content)) {
+          editModal.$scope.content.name = generateName(newValue);
+        }
       });
 
       editModal.$scope.$on('modal.hide.before',function(event, editModal) {
@@ -38,17 +40,17 @@ angular.module('jumplink.cms.content', [
         editModal.$scope.changeName = false;
         if(editModal.$scope.ok) {
           return validateContent(editModal.$scope.content, editModal.$scope.callback);
-        } else {
-          if(editModal.$scope.callback) editModal.$scope.callback("discarded", editModal.$scope.content);
+        }
+        if(angular.isFunction(editModal.$scope.callback)) {
+          return editModal.$scope.callback("discarded", editModal.$scope.content);
         }
       });
-
       return getEditModal();
-    }
+    };
 
     var getEditModal = function() {
       return editModal;
-    }
+    };
 
     var subscribe = function() {
       // called on content changes
@@ -62,100 +64,118 @@ angular.module('jumplink.cms.content', [
           break;
         }
       });
-    }
+    };
 
-    var toogleShowHtml = function(contents, cb) {
+    var toogleShowHtml = function(contents, callback) {
       showHtml = !showHtml;
       if(showHtml && contents) {
         contents = beautifyEach(contents);
       }
-      if(cb) cb(null, showHtml);
-      else return showHtml;
-    }
+      if(angular.isFunction(callback)) {
+        return callback(null, showHtml);
+      }
+      return showHtml;
+    };
 
-    var beautify = function(content, cb) {
+    var beautify = function(content, callback) {
       content.content = html_beautify(content.content);
-      if(cb) cb(null, content);
-      else return content;
-    }
+      if(angular.isFunction(callback)) {
+        return callback(null, content);
+      }
+      return content;
+    };
 
-    var beautifyEach = function(contents, cb) {
+    var beautifyEach = function(contents, callback) {
       for (var i = contents.length - 1; i >= 0; i--) {
         contents[i].content = beautify(contents[i].content);
-      };
-      if(cb) cb(null, contents);
-      else return contents;
-    }
+      }
+      if(angular.isFunction(callback)) {
+        return callback(null, contents);
+      }
+      return contents;
+    };
 
     var getByName = function (contents, name) {
       var index = UtilityService.findKeyValue(contents, 'name', name);
       if(index > -1) {
         return contents[index];
-      } else {
-        return null;
       }
-    }
+      return null;
+    };
 
     var create = function(data) {
-
-      if(!data || !data.content) data.content = "";
-      if(!data || !data.title) data.title = "";
-      if(!data || !data.name) data.name = "";
-      if(!data || !data.type) data.type = "dynamic";
-      if(!data || !data.page) cb("Page not set.")
-
-      return data;
-    }
-
-    var append = function(contents, content, cb) {
-      SortableService.append(contents, content, cb, true, 'name');
-    }
-
-    var createEdit = function(contents, page, cb) {
-      var data = create({page:page});
-      edit(data, cb, true);
-    }
-
-    var swap = function(contents, index_1, index_2, cb) {
-      return SortableService.swap(contents, index_1, index_2, cb);
-    }
-
-    var moveForward = function(index, contents, cb) {
-      return SortableService.moveForward(index, contents, cb);
-    }
-
-    var moveBackward = function(index, contents, cb) {
-      return SortableService.moveBackward(index, contents, cb);
-    }
-
-    var validateContent = function (content, cb) {
-      if(content.title) {
-        return fix(content, cb)
-      } else {
-        if(cb) cb("Title not set", content);
-        else return null;
+      if(!data || !data.content) {
+        data.content = "";
       }
-    }
+      if(!data || !data.title) {
+        data.title = "";
+      }
+      if(!data || !data.name) {
+        data.name = "";
+      }
+      if(!data || !data.type) {
+        data.type = "dynamic";
+      }
+      if(!data || !data.page) {
+        callback("Page not set.");
+      }
+      return data;
+    };
 
-    var edit = function(content, cb, changeName) {
+    var append = function(contents, content, callback) {
+      SortableService.append(contents, content, callback, true, 'name');
+    };
+
+    var createEdit = function(contents, page, callback) {
+      var data = create({page:page});
+      edit(data, callback, true);
+    };
+
+    var swap = function(contents, index_1, index_2, callback) {
+      return SortableService.swap(contents, index_1, index_2, callback);
+    };
+
+    var moveForward = function(index, contents, callback) {
+      return SortableService.moveForward(index, contents, callback);
+    };
+
+    var moveBackward = function(index, contents, callback) {
+      return SortableService.moveBackward(index, contents, callback);
+    };
+
+    var validateContent = function (content, callback) {
+      if(content.title) {
+        return fix(content, callback);
+      }
+      if(angular.isFunction(callback)) {
+        return callback("Title not set", content);
+      }
+      return null;
+    };
+
+    var edit = function(content, callback, changeName) {
       $log.debug("edit", content);
       editModal.$scope.content = content;
-      editModal.$scope.callback = cb;
-      if(changeName) editModal.$scope.changeName = changeName;
-      else editModal.$scope.changeName = false;
+      editModal.$scope.callback = callback;
+      if(changeName) {
+        editModal.$scope.changeName = changeName;
+      }
+      else {
+        editModal.$scope.changeName = false;
+      }
       focus('contentedittitle');
       //- Show when some event occurs (use $promise property to ensure the template has been loaded)
       editModal.$promise.then(editModal.show);
-    }
+    };
 
-    var removeFromClient = function (contents, index, content, cb) {
-      return SortableService.remove(index, contents, cb);
-    }
+    var removeFromClient = function (contents, index, content, callback) {
+      return SortableService.remove(index, contents, callback);
+    };
 
-    var remove = function(contents, index, content, page, cb) {
+    var remove = function(contents, index, content, page, callback) {
       var errors = [
         'Content konnte nicht gelöscht werden.'
-      ]
+      ];
       if(typeof(index) === 'undefined' || index === null) {
         index = contents.indexOf(content);
       }
@@ -165,141 +185,177 @@ angular.module('jumplink.cms.content', [
       if(content.id) {
         $log.debug("remove from server, too" ,content);
         $sailsSocket.delete('/content/'+content.id+"?page="+page, {id:content.id, page: page}).success(function(data, status, headers, config) {
-          if(cb) cb(null, contents)
+          if(angular.isFunction(callback)) {
+            return callback(null, contents);
+          }
+          return contents;
         }).
         error(function(data, status, headers, config) {
           $log.error (errors[0], data);
-          if(cb) cb(data);
+          if(angular.isFunction(callback)) {
+            return callback(data);
+          }
+          return data;
         });
       } else {
-        if(cb) cb(null, contents);
+        if(angular.isFunction(callback)) {
+          return callback(null, contents);
+        }
+        return contents;
       }
-    }
+    };
 
-    var refresh = function(contents, cb) {
+    var refresh = function(contents, callback) {
       fixEach(contents, function(err, contents) {
         if(err) {
           $log.error(err);
-          if(cb) cb(err);
-          else return err;
+          if(angular.isFunction(callback)) {
+            return callback(err);
+          }
+          return err;
         }
         beautifyEach(contents, function(err, contents) {
           if(err) {
             $log.error(err);
-            if(cb) cb(err);
-            else return err;
-          } else {
-            if(cb) cb(null, contents);
-            else return contents;
+            if(angular.isFunction(callback)) {
+              return callback(err);
+            }
+            return err;
           }
+          if(angular.isFunction(callback)) {
+            return callback(null, contents);
+          }
+          return contents;
         });
       });
-    }
+    };
 
     var generateName = function (title) {
+      var name = "";
       if(title && title !== "") {
         // Set content.name to content.title but only the letters in lower case
-        var name = title.toLowerCase().replace(/[^a-z1-9]+/g, '');
+        name = title.toLowerCase().replace(/[^a-z1-9]+/g, '');
         $log.debug("set content.name to", name);
-      } else {
-        var name = "";
       }
-
       return name;
-    }
+    };
 
     /*
      * Validate and fix content to make it saveable
      */
-    var fix = function(content, cb) {
+    var fix = function(content, callback) {
 
       if(angular.isDefined(content)) {
-        if(angular.isUndefined(content.name) || content.name === '' || content.name === null)
+        if(angular.isUndefined(content.name) || content.name === '' || content.name === null) {
           content.name = generateName(content.title);
+        }
 
         if(!content.type || content.type === "") {
           $log.warn("Fix content type not set, set it to dynamic");
           content.type = 'fix';
         }
       } else {
-         if(cb) return cb("content not set");
-         return null;
+        if(angular.isFunction(callback)) {
+          return callback("content not set");
+        }
+        return null;
       }
 
-      if(cb) return cb(null, content);
-      else return content;
-    }
+      if(angular.isFunction(callback)) {
+        return callback(null, content);
+      }
+      return content;
+    };
 
     /*
      * Validate and fix all contents to make them saveable
      */
-    var fixEach = function(contents, cb) {
+    var fixEach = function(contents, callback) {
       for (var i = contents.length - 1; i >= 0; i--) {
         contents[i] = fix(contents[i]);
-      };
-      if(cb) cb(null, contents);
-      else return contents;
-    }
+      }
+      if(angular.isFunction(callback)) {
+        return callback(null, contents);
+      }
+      return contents;
+    };
 
-    var saveOne = function(content, page, cb) {
+    var saveOne = function(content, page, callback) {
       var errors = [
         'Inhalt konnte nicht gespeichert werden'
       ];
       content.page = page;
       fix(content, function(err, content) {
         if(err) {
-          if(cb) cb(err);
-          else return err;
+          if(angular.isFunction(callback)) {
+            return callback(err);
+          }
+          return err;
         }
         $sailsSocket.put('/content/replace', content).success(function(data, status, headers, config) {
           //- $log.debug ("save response from /content/replaceall", data, status, headers, config);
-          if(data != null && typeof(data) !== "undefined") {
+          if(data !== null && typeof(data) !== "undefined") {
             content = data;
             // $log.debug (content);
-            if(cb) cb(null, content);
+            if(angular.isFunction(callback)) {
+              return callback(null, content);
+            }
+            return content;
           } else {
             $log.error(errors[0]);
-            if(cb) cb(errors[0]);
-            else return errors[0];
+            if(angular.isFunction(callback)) {
+              return callback(errors[0]);
+            }
+            return errors[0];
           }
         }).
         error(function(data, status, headers, config) {
           $log.error (errors[0], data);
-          if(cb) cb(data);
+          if(angular.isFunction(callback)) {
+            return callback(data);
+          }
+          return data;
         });
       });
+    };
 
-    }
-
-    var save = function(contents, page, cb) {
+    var save = function(contents, page, callback) {
       var errors = [
         'Seite konnte nicht gespeichert werden'
       ];
       fixEach(contents, function(err, contents) {
         if(err) {
-          if(cb) cb(err);
-          else return err;
+          if(angular.isFunction(callback)) {
+            return callback(err);
+          }
+          return err;
         }
-        $sailsSocket.put('/content/replaceall', {contents: contents, page: page}).success(function(data, status, headers, config) {
+        return $sailsSocket.put('/content/replaceall', {contents: contents, page: page}).success(function(data, status, headers, config) {
           //- $log.debug ("save response from /content/replaceall", data, status, headers, config);
-          if(data != null && typeof(data) !== "undefined") {
+          if(data !== null && typeof(data) !== "undefined") {
             contents = $filter('orderBy')(data, 'position');
             // $log.debug (data);
-            if(cb) cb(null, contents);
-          } else {
-            $log.error(errors[0]);
-            if(cb) cb(errors[0]);
-            else return errors[0];
+            if(angular.isFunction(callback)) {
+              return callback(null, contents);
+            }
+            return contents;
           }
+          $log.error(errors[0]);
+          if(angular.isFunction(callback)) {
+            return callback(errors[0]);
+          }
+          return errors[0];
         }).
         error(function(data, status, headers, config) {
           $log.error (errors[0], data);
-          if(cb) cb(data);
+          if(angular.isFunction(callback)) {
+            callback(data);
+          }
         });
       });
-    }
+    };
 
-    var findOne = function(page, name, type, cb, next) {
+    var findOne = function(page, name, type, callback, next) {
       var errors = [
         "Error: On trying to find one with page: "+page+", name: "+name,
         "request has more than one results"
@@ -309,29 +365,35 @@ angular.module('jumplink.cms.content', [
         name: name
       };
       var url = '/content/find';
-      if(type) query.type = type;
+      if(type) {
+        query.type = type;
+      }
       return $sailsSocket.put(url, query).then (function (data) {
         if(angular.isUndefined(data) || angular.isUndefined(data.data)) {
           return null;
-        } else {
-          if (data.data instanceof Array) {
-            data.data = data.data[0];
-            $log.error(errors[1]);
-          }
-          // data.data.content = html_beautify(data.data.content);
-          if(next) data.data = next(data.data);
-
-          if(cb) cb(null, data.data);
-          else return data.data;
         }
+        if(data.data instanceof Array) {
+          data.data = data.data[0];
+          $log.error(errors[1]);
+        }
+        // data.data.content = html_beautify(data.data.content);
+        if(next) {
+          data.data = next(data.data);
+        }
+        if(angular.isFunction(callback)) {
+          return callback(null, data.data);
+        }
+        return data.data;
       }, function error (resp){
         $log.error(errors[0], resp);
-        if(cb) cb(errors[0], resp);
-        else return resp;
+        if(angular.isFunction(callback)) {
+          return callback(errors[0], resp);
+        }
+        return resp;
       });
     };
 
-    var findAll = function(page, type, cb, next) {
+    var findAll = function(page, type, callback, next) {
       var errors = [
         "Error: On trying to find all with page: "+page+" and type: "+type,
         "Warn: On trying to find all "+page+" contents! Not found, content is empty!"
@@ -340,7 +402,9 @@ angular.module('jumplink.cms.content', [
         page: page,
       };
       var url = '/content/findall';
-      if(type) query.type = type;
+      if(type) {
+        query.type = type;
+      }
       return $sailsSocket.put(url, query).then (function (data) {
         if(angular.isUndefined(data) || angular.isUndefined(data.data)) {
           $log.warn(errors[1]);
@@ -349,24 +413,28 @@ angular.module('jumplink.cms.content', [
         // data.data.content = html_beautify(data.data.content);
         data.data = $filter('orderBy')(data.data, 'position');
         // $log.debug(data);
-        if(next) data.data = next(data.data);
+        if(next) {
+          data.data = next(data.data);
+        }
 
-        if(cb) {
-          cb(null, data.data);
+        if(angular.isFunction(callback)) {
+          callback(null, data.data);
         } else {
           return data.data;
         }
       }, function error (resp){
         $log.error(errors[0], resp);
-        if(cb) cb(errors[0], resp);
-        else return resp;
+        if(angular.isFunction(callback)) {
+          return callback(errors[0], resp);
+        }
+        return resp;
       });
     };
 
     /*
      * get all contents for page including images for each content.name 
      */
-    var findAllWithImage = function(page, type, cb, next) {
+    var findAllWithImage = function(page, type, callback, next) {
       // $log.debug("findAllWithImage");
       var errors = [
         "Error: On trying to find all with page: "+page+" and type: "+type,
@@ -389,33 +457,35 @@ angular.module('jumplink.cms.content', [
         data.data.contents = $filter('orderBy')(data.data.contents, 'position');
         data.data.images = $filter('orderBy')(data.data.images, 'position');
         // $log.debug(data);
-        if(next) data.data = next(data.data);
-
-        if(cb) {
-          cb(null, data.data);
-        } else {
-          return data.data;
+        if(next) {
+          data.data = next(data.data);
         }
+        if(angular.isFunction(callback)) {
+          return callback(null, data.data);
+        }
+        return data.data;
       }, function error (resp){
         $log.error(errors[0], resp);
-        if(cb) cb(errors[0], resp);
-        else return resp;
+        if(angular.isFunction(callback)) {
+          return callback(errors[0], resp);
+        }
+        return resp;
       });
     };
 
     /**
      * Resolve function for angular ui-router.
-     * name, cb and next parameters are optional.
+     * name, callback and next parameters are optional.
      * use next to transform the result before you get it back
-     * use cb if you want not use promise
+     * use callback if you want not use promise
      */
-    var find = function(page, name, type, cb, next) {
+    var find = function(page, name, type, callback, next) {
       //- get soecial content (one)
       if(angular.isDefined(name)) {
         return findOne(page, name, type, next);
       // get all for page
       } else {
-        return findAll(page, type, cb, next);
+        return findAll(page, type, callback, next);
       }
     };
 

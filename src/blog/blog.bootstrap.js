@@ -12,7 +12,6 @@ angular.module('jumplink.cms.bootstrap.blog', [
   var typeModal = null;
   var page = null;
 
-
   var openTypeChooserModal = function(blogPost) {
     typeModal.$scope.blogPost = blogPost;
     //- Show when some blogPost occurs (use $promise property to ensure the template has been loaded)
@@ -32,7 +31,7 @@ angular.module('jumplink.cms.bootstrap.blog', [
     editModal.$scope.abort = function (hide) {
       editModal.$scope.ok = false;
       hide();
-    }
+    };
 
     // set default fileOptions
     if(angular.isUndefined(fileOptions)) {
@@ -47,7 +46,7 @@ angular.module('jumplink.cms.bootstrap.blog', [
           cropwidth: 1200,
           cropheight: 1200,
         }
-      }
+      };
     }
 
     var uploadOptions = {
@@ -64,10 +63,12 @@ angular.module('jumplink.cms.bootstrap.blog', [
 
     editModal.$scope.uploader.onCompleteItem = function(fileItem, response, status, headers) {
       $log.debug("[BlogBootstrapService.onCompleteItem] fileItem", fileItem, "response", response);
-      if(!angular.isArray(fileItem.blogPost.attachments)) fileItem.blogPost.attachments = [];
+      if(!angular.isArray(fileItem.blogPost.attachments)) {
+        fileItem.blogPost.attachments = [];
+      }
       for (var i = 0; i < response.files.length; i++) {
         fileItem.blogPost.attachments.push(response.files[i]);
-      };
+      }
     };
 
     editModal.$scope.uploader.onProgressItem = function(fileItem, progress) {
@@ -91,27 +92,29 @@ angular.module('jumplink.cms.bootstrap.blog', [
         // });
         return BlogService.validate(editModal.$scope.blogPost, null, editModal.$scope.callback);
       } else {
-        if(editModal.$scope.callback) editModal.$scope.callback("discarded", editModal.$scope.blogPost);
+        if(editModal.$scope.callback) {
+          editModal.$scope.callback("discarded", editModal.$scope.blogPost);
+        }
       }
     });
 
     return getModals();
-  }
+  };
 
   var getEditModal = function() {
     return editModal;
-  }
+  };
 
   var getTypeModal = function() {
     return typeModal;
-  }
+  };
 
   var getModals = function() {
     return {
       editModal: getTypeModal(),
       typeModal: getTypeModal()
-    }
-  }
+    };
+  };
 
   var edit = function(blogPost, cb) {
     $log.debug("[BlogService.edit]", blogPost);
@@ -125,7 +128,7 @@ angular.module('jumplink.cms.bootstrap.blog', [
   };
 
   var createEdit = function(blogPosts, blogPost, cb) {
-    var blogPost = BlogService.create(blogPost); 
+    blogPost = BlogService.create(blogPost); 
     edit(blogPost, cb);
   };
 
