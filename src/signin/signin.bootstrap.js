@@ -1,10 +1,13 @@
-angular.module('jumplink.cms.bootstrap.sigin', [
+angular.module('jumplink.cms.bootstrap.signin', [
     'mgcrea.ngStrap',
-    'jumplink.cms.session'
+    'jumplink.cms.signin'
   ])
 
-  .service('SigninBootstrapService', function ($rootScope, SessionService, $log, $modal) {
-    var siginWithModal = function(title, callback) {
+  .service('SigninBootstrapService', function ($rootScope, SigninService, $log, $modal) {
+    var siginWithModal = function(title, goBackAfterSignin, callback) {
+      if(angular.isFunction(goBackAfterSignin) && angular.isUndefined(callback)) {
+        callback = goBackAfterSignin;
+      }
       var signinModal = $modal({title: title, templateUrl: '/views/modern/signin.bootstrap.modal.jade', show: false});
       signinModal.$scope.aborted = false;
       signinModal.$scope.result = null;
@@ -12,14 +15,15 @@ angular.module('jumplink.cms.bootstrap.sigin', [
         email: "",
         password: ""
       };
+      signinModal.$scope.goBackAfterSignin = goBackAfterSignin === true;
 
       signinModal.$scope.abort = function (user) {
         signinModal.$scope.aborted = true;
       };
 
-      signinModal.$scope.signin = function (user) {
+      signinModal.$scope.signin = function (user, goBackAfterSignin) {
         $log.debug("[SigninBootstrapService.siginWithModal.signin]", user);
-        SessionService.create(user, function (error, result) {
+        SigninService.signin(user, false, function (error, result) {
           if(error) {
             signinModal.$scope.error = error;
             return signinModal.$scope.error;

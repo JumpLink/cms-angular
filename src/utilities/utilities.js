@@ -32,9 +32,14 @@ angular.module('jumplink.cms.utilities', [
       return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
     };
 
+    var lowercaseFirstLetter = function (string) {
+      return string.charAt(0).toLowerCase() + string.slice(1);
+    };
+
     return {
       invertOrder: invertOrder,
       findKeyValue: findKeyValue,
-      capitalizeFirstLetter: capitalizeFirstLetter
+      capitalizeFirstLetter: capitalizeFirstLetter,
+      lowercaseFirstLetter: lowercaseFirstLetter,
     };
   });

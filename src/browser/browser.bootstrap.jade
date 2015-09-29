@@ -1,0 +1,19 @@
+div(style="padding: 40px 15px;text-align: center;")
+  h1
+    | Seite befindet sich im modernen Modus
+  .lead
+    | Im modernen Modus ist diese Seite ohne Einschränkungen nutzbar, vorrausgesetzt ihr Webbrowser wird unterstützt.
+  h2
+    | Grund für den modernen Modus:
+  div(ng-if="force == 'modern'")
+    h3
+      | Sie haben den modernen Modus erzwungen.
+    .lead
+      a.btn.btn-success.btn-lg(href="/") Modernen modus verlassen
+  div(ng-if="force != 'modern'")
+      h3
+        | Ihr Webbrowser wird unterstützt.
+div(style="padding: 40px 15px;text-align: center;")
+  h3
+    | Wenn diese Webseite nicht wie erwartet funktioniert, können Sie den eingeschränkten
+  a.btn.btn-danger.btn-lg(onclick='window.open("/?force=fallback","_self")') Kompatibilitätsmodus erzwingen

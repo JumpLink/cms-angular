@@ -18,9 +18,11 @@ angular.module('jumplink.cms.bootstrap.blog', [
     typeModal.$promise.then(typeModal.show);
   };
 
-  var setModals = function($scope, fileOptions, pageString) {
+  var setModals = function($scope, fileOptions, pageString, onFileCompleteCallback) {
 
-    page = pageString;
+    if(!angular.isString(page)) {
+      page = pageString;
+    }
 
     editModal = $modal({title: 'Blogpost bearbeiten', templateUrl: '/views/modern/blog/editmodal.bootstrap.jade', show: false});
     editModal.$scope.ok = false;
@@ -36,10 +38,10 @@ angular.module('jumplink.cms.bootstrap.blog', [
     // set default fileOptions
     if(angular.isUndefined(fileOptions)) {
       fileOptions = {
-        path: 'assets/files/blog',
+        path: 'assets/files/blog', // TODO get path from config
         thumbnail: {
           width: 300,
-          path: 'assets/files/blog'
+          path: 'assets/files/blog' // TODO get path from config
         },
         rescrop: {
           width: 1200,
@@ -60,6 +62,10 @@ angular.module('jumplink.cms.bootstrap.blog', [
 
     editModal.$scope.uploader = new FileUploader(uploadOptions);
     editModal.$scope.openTypeChooserModal = openTypeChooserModal;
+
+    if(angular.isFunction(onFileCompleteCallback)) {
+      $scope.uploader.onComplete = onFileCompleteCallback;
+    }
 
     editModal.$scope.uploader.onCompleteItem = function(fileItem, response, status, headers) {
       $log.debug("[BlogBootstrapService.onCompleteItem] fileItem", fileItem, "response", response);

@@ -12,6 +12,7 @@ angular.module('jumplink.cms.event', [
   var editModal = null;
   var typeModal = null;
   var types = ['lecture', 'panel discussion', 'travel', 'info', 'food', 'other'];
+  var page = null;
 
   var validate = function (event, callback) {
     if(event.title) {
@@ -34,7 +35,12 @@ angular.module('jumplink.cms.event', [
     typeModal.$promise.then(typeModal.show);
   };
 
-  var setModals = function($scope) {
+  var setModals = function($scope, fileOptions, pageString) {
+
+    if(!angular.isString(page)) {
+      page = pageString;
+    }
+    
     editModal = $modal({title: 'Ereignis bearbeiten', templateUrl: '/views/modern/events/editmodal.jade', show: false});
     editModal.$scope.ok = false;
     editModal.$scope.accept = function (hide) {
@@ -45,8 +51,24 @@ angular.module('jumplink.cms.event', [
       editModal.$scope.ok = false;
       hide();
     };
-    editModal.$scope.uploader = new FileUploader({url: 'timeline/upload', removeAfterUpload: true});
+
+    // set default fileOptions
+    if(angular.isUndefined(fileOptions)) {
+      fileOptions = {};
+    }
+
+    var uploadOptions = {
+      url: 'timeline/upload',
+      removeAfterUpload: true,
+      // WARN: headers HTML5 only
+      headers: {
+        options: JSON.stringify(fileOptions)
+      }
+    };
+
+    editModal.$scope.uploader = new FileUploader(uploadOptions);
     editModal.$scope.openTypeChooserModal = openTypeChooserModal;
+
     editModal.$scope.uploader.onCompleteItem = function(fileItem, response, status, headers) {
       fileItem.event.download = response.files[0].uploadedAs;
     };

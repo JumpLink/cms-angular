@@ -1,16 +1,16 @@
 .navbar.navbar-default(role='navigation', bs-navbar, ng-class="{'navbar-static-top': position == 'static-top', 'navbar-fixed-top': position == 'fixed-top', 'navbar-fixed-bottom': position == 'fixed-bottom'}")
   div(ng-class="{'container': {{fluid != true}}, 'container-fluid': {{fluid == true}}}")
     .navbar-header
-      button.btn.btn-primary.navbar-btn.navbar-left.hidden-lg.hidden-md(type="button", data-template-url="", data-template="<jlsidebar routes='routes'></jlsidebar>", bs-aside="aside", data-title="Menü", data-placement="left", data-animation="am-slide-left", data-container=".main-body", style="font-size: 14px; margin-left: 15px; margin-right: 15px;")
+      button.btn.btn-primary.navbar-btn.navbar-left.hidden-lg.hidden-md(type="button", data-template-url="", data-template="<jl-sidebar routes='routes'></jlsidebar>", bs-aside="aside", data-title="Menü", data-placement="left", data-animation="am-slide-left", data-container=".main-body", style="font-size: 14px; margin-left: 15px; margin-right: 15px;")
         i.fa.fa-bars
       a.navbar-brand(ui-sref='layout.home')
         img(src="/assets/images/logo_small.svg", style="height: 40px;margin-top:-10px;float:left;padding-right:5px;")
         span.hidden-xs.hidden-md.hidden-lg {{title}}
         span.hidden-sm.hidden-md.hidden-lg {{shorttitle}}
     ul.nav.navbar-nav.navbar-left.visible-md-block.hidden-xs.hidden-sm.visible-lg-block
-      li(ng-repeat="route in routes", ui-sref-active="active")
+      li(ng-repeat="route in routes | filter:filter", ui-sref-active="active")
         a(ui-sref='{{route.state.name}}') {{route.title}}
     .navbar-right
-      button.btn.btn-primary.navbar-btn(ng-if="$root.fullscreenIsSupported", ng-click="toggleFullscreen()", style="font-size: 14px; margin-left: 15px;")
+      button.btn.btn-primary.navbar-btn(ng-if="fullscreenIsSupported", ng-click="toggleFullscreen()", style="font-size: 14px; margin-left: 15px;")
         i.fa.fa-expand(ng-hide="isFullscreen", title="Vollbild")
         i.fa.fa-compress(ng-show="isFullscreen", title="Vollbild verlassen")

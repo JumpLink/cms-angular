@@ -1,5 +1,5 @@
 .attachment
-  a.attachment-link(ng-href="{{path + '/' + attachment.uploadedAs}}")
+  a.attachment-link(ng-click="open('{{path}}/{{attachment.uploadedAs}}', '_blank')")
     img.img-responsive.img-thumbnail(ng-class="{'img-center':centerImage}", ng-if="attachment.isImage || attachment.hasPreview", ng-src="{{path + '/' + attachment.thumb.name}}", title="{{attachment.filename}}")
     div.attachment-placeholder.img-thumbnail(ng-if="!attachment.isImage && !attachment.hasPreview", title="{{attachment.filename}}")
       .fa.fa-table(ng-if="attachment.hasTableIcon")
@@ -9,7 +9,7 @@
       .fa.fa-file-audio-o(ng-if="attachment.hasAudioIcon")
       .fa.fa-file(ng-if="attachment.hasApplicationIcon")
       .fa.fa-paperclip(ng-if="attachment.hasUnknownIcon")
-  button.btn-attachment.btn.btn-danger.btn-sm.pull-right(type="button", ng-if="authenticated", ng-click="destroy(parent, attachmentIndex)", title="Anhang löschen")
+  button.btn-attachment.btn.btn-danger.btn-sm.pull-right(type="button", ng-if="authenticated && bloggerOrBetter", ng-click="destroy(parent, attachmentIndex)", title="Anhang löschen")
     .fa.fa-trash
     .clearfix
   .clearfix

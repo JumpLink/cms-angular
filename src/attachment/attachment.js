@@ -2,7 +2,11 @@ angular.module('jumplink.cms.attachment', [
   'sails.io',
 ])
 
-.service('AttachmentService', function (moment, $sailsSocket, $async, $log) {
+.service('AttachmentService', function (moment, $sailsSocket, $async, $log, $window) {
+
+  var open = function (url, target) {
+    $window.open(url, target);
+  };
 
   /**
    * delete attachment on local / client / browser
@@ -41,6 +45,7 @@ angular.module('jumplink.cms.attachment', [
   };
 
   return {
+    open: open,
     destroyLocally: destroyLocally,
     destroyExternally: destroyExternally,
     destroy: destroy,

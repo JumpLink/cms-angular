@@ -10,5 +10,5 @@
           input.form-control(name="email", ng-model="user.email", type='text', placeholder='Email', ng-required='required', autofocus='autofocus')
           input.form-control(name="password", ng-model="user.password", type='password', placeholder='Password', ng-required='required')
       .modal-footer
-        button.btn.btn-primary(type='button', ng-click='signin(user);$hide()') Anmelden
+        button.btn.btn-primary(type='button', ng-click='signin(user, goBackAfterSignin);$hide()') Anmelden
         button.btn.btn-default(type='button', ng-click='abort(user);$hide()') Abbrechen

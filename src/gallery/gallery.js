@@ -61,15 +61,13 @@ angular.module('jumplink.cms.gallery', [
     return uploadModal;
   };
 
-  var setUploadModal = function($scope, imageBlocks, contentBlocks, options, callback) {
+  var setUploadModal = function($scope, imageBlocks, contentBlocks, options, callback, onCompleteCallback) {
 
     // if options not set, set to default values
     if(angular.isUndefined(options)) {
       options = {
-        path: 'assets/files/gallery',
         thumbnail: {
           width: 300,
-          path: 'assets/files/gallery'
         },
         rescrop: {
           width: 1200,
@@ -96,6 +94,10 @@ angular.module('jumplink.cms.gallery', [
         return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
       }
     });
+
+    if(angular.isFunction(onCompleteCallback)) {
+      $scope.uploader.onComplete = onCompleteCallback;
+    }
 
     $scope.uploader.onCompleteItem = function(fileItem, response, status, headers) {
       //fileItem.member.image = response.files[0].uploadedAs;
@@ -277,7 +279,7 @@ angular.module('jumplink.cms.gallery', [
     uploadModal.$scope.$on('modal.hide',function(){
       $log.debug("upload modal closed");
       if(angular.isFunction(callback)) {
-        callback();
+        callback(null);
       }
     });
   };

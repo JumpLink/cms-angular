@@ -17,6 +17,9 @@ angular.module('jumplink.cms.bootstrap.attachment', [
     },
     link: function ($scope, $element, $attrs) {
       console.log("[jlAttachmentBootstrap.link]", $scope);
+    },
+    controller: function ($scope, AttachmentService) {
+      $scope.open = AttachmentService.open;
     }
   };
 });

@@ -53,7 +53,7 @@ angular.module('jumplink.cms.blog', [
   var destroy = function(blogPosts, blogPost, callback) {
     // $log.debug("remove blogPost", blogPost);
     if(blogPost.id) {
-      $log.debug(blogPost);
+      $log.debug("[jumplink.cms.blog.BlogService.destroy]", blogPost);
       $sailsSocket.delete('/blog/'+blogPost.id).success(function(users, status, headers, config) {
         removeFromClient(blogPosts, blogPost, callback);
       });
@@ -144,8 +144,12 @@ angular.module('jumplink.cms.blog', [
     return objects;
   };
 
-  var refresh = function(blogPosts) {
+  var refresh = function(blogPosts, callback) {
+    $log.debug("[jumplink.cms.blog.BlogService.refresh]");
     blogPosts = transform(blogPosts);
+    if(angular.isFunction(callback)) {
+      return callback(null, blogPosts);
+    }
     return blogPosts;
   };
 
