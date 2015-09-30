@@ -49,7 +49,7 @@ angular.module('jumplink.cms.session', [
         return deferred.resolve(data.data);
       } else {
         $log.log("is not authenticated", data);
-        return deferred.reject('Not logged in');
+        return deferred.reject('You need to be logged in');
       }
     });
     return deferred.promise;
@@ -151,12 +151,29 @@ angular.module('jumplink.cms.session', [
         return deferred.resolve(data.data);
       } else {
         $log.log("is not employeeOrBetter", data);
-        return deferred.reject('Not logged in');
+        return deferred.reject('You must be an employee or a user with more credentials to do that');
       }
     });
     return deferred.promise;
   };
 
+  /**
+   * Used for routes you can only visit if you are signed in and user is admin or better, throws an error message if your are not employee or better
+   */
+  var needToBeSiteadminOrBetter = function (callback) {
+    $log.log("[SessionService.authenticated] authenticated");
+    var deferred = $q.defer();
+    $sailsSocket.get('/session/siteadminOrBetter').then (function (data) {
+      if (data.data) {
+        $log.log("is siteadminOrBetter", data);
+        return deferred.resolve(data.data);
+      } else {
+        $log.log("is not employeeOrBetter", data);
+        return deferred.reject('You must be an admin or a user with more credentials to do that');
+      }
+    });
+    return deferred.promise;
+  };
   /**
    * 
    */
@@ -172,7 +189,7 @@ angular.module('jumplink.cms.session', [
   };
 
   /**
-   * 
+   * Get logged in user
    */
   var getUser = function (callback) {
     $log.log("[SessionService.getUser]");
@@ -198,6 +215,7 @@ angular.module('jumplink.cms.session', [
     employee: employee,
     employeeOrBetter: employeeOrBetter,
     needToBeEmployeeOrBetter: needToBeEmployeeOrBetter,
+    needToBeSiteadminOrBetter: needToBeSiteadminOrBetter,
     getAllPolicies: getAllPolicies,
     getUser: getUser
   };
