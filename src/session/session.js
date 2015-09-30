@@ -142,7 +142,7 @@ angular.module('jumplink.cms.session', [
   /**
    * Used for routes you can only visit if you are signed in and user employee or better, throws an error message if your are not employee or better
    */
-  var needToBeEmployeeOrBetter = function () {
+  var needToBeEmployeeOrBetter = function (callback) {
     $log.log("[SessionService.authenticated] authenticated");
     var deferred = $q.defer();
     $sailsSocket.get('/session/employeeOrBetter').then (function (data) {
@@ -155,6 +155,34 @@ angular.module('jumplink.cms.session', [
       }
     });
     return deferred.promise;
+  };
+
+  /**
+   * 
+   */
+  var getAllPolicies = function (callback) {
+    $log.log("[SessionService.getAllPolicies]");
+    var deferred = $q.defer();
+    return $sailsSocket.get('/session/getAllPolicies').then (function (data) {
+      if(angular.isFunction(callback)) {
+        return callback(null, data.data);
+      }
+      return data.data;
+    });
+  };
+
+  /**
+   * 
+   */
+  var getUser = function (callback) {
+    $log.log("[SessionService.getUser]");
+    var deferred = $q.defer();
+    return $sailsSocket.get('/session/getUser').then (function (data) {
+      if(angular.isFunction(callback)) {
+        return callback(null, data.data);
+      }
+      return data.data;
+    });
   };
 
   return {
@@ -170,5 +198,7 @@ angular.module('jumplink.cms.session', [
     employee: employee,
     employeeOrBetter: employeeOrBetter,
     needToBeEmployeeOrBetter: needToBeEmployeeOrBetter,
+    getAllPolicies: getAllPolicies,
+    getUser: getUser
   };
 });

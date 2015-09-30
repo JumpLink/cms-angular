@@ -17,6 +17,7 @@ angular.module('jumplink.cms.admin', [
         addDropdownActions: "=?",
         adminSettingDropdown: "=?",
         authenticated: "=?",
+        allowActions: "=?",
       },
       link: function ($scope, $element, $attrs) {
 

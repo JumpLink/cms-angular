@@ -4,10 +4,24 @@ angular.module('jumplink.cms.bootstrap.signin', [
   ])
 
   .service('SigninBootstrapService', function ($rootScope, SigninService, $log, $modal) {
-    var siginWithModal = function(title, goBackAfterSignin, callback) {
-      if(angular.isFunction(goBackAfterSignin) && angular.isUndefined(callback)) {
+    var siginWithModal = function(title, goBackAfterSignin, extendRoles, scope, callback) {
+      $log.debug("[SigninBootstrapService.siginWithModal]", title, goBackAfterSignin, extendRoles);
+
+      if(angular.isFunction(goBackAfterSignin) && !angular.isFunction(callback)) {
         callback = goBackAfterSignin;
+        goBackAfterSignin = false;
       }
+
+      if(angular.isFunction(extendRoles) && !angular.isFunction(callback)) {
+        callback = extendRoles;
+        extendRoles = false;
+      }
+
+      if(angular.isFunction(scope) && !angular.isFunction(callback)) {
+        callback = scope;
+        scope = null;
+      }
+
       var signinModal = $modal({title: title, templateUrl: '/views/modern/signin.bootstrap.modal.jade', show: false});
       signinModal.$scope.aborted = false;
       signinModal.$scope.result = null;
@@ -15,15 +29,15 @@ angular.module('jumplink.cms.bootstrap.signin', [
         email: "",
         password: ""
       };
-      signinModal.$scope.goBackAfterSignin = goBackAfterSignin === true;
+      // signinModal.$scope.goBackAfterSignin = goBackAfterSignin === true;
 
       signinModal.$scope.abort = function (user) {
         signinModal.$scope.aborted = true;
       };
 
-      signinModal.$scope.signin = function (user, goBackAfterSignin) {
+      signinModal.$scope.signin = function (user) {
         $log.debug("[SigninBootstrapService.siginWithModal.signin]", user);
-        SigninService.signin(user, false, function (error, result) {
+        SigninService.signin(user, goBackAfterSignin, extendRoles, scope, function (error, result) {
           if(error) {
             signinModal.$scope.error = error;
             return signinModal.$scope.error;

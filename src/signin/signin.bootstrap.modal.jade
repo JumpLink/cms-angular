@@ -6,9 +6,10 @@
         h4.modal-title(ng-bind='title')
       .modal-body
         img.profile-img(src='/assets/images/members/photo.png', alt='')
-        form.form-signin(role='form')
+        form.form-signin(role='form', ng-submit="signin(user, goBackAfterSignin);$hide()")
           input.form-control(name="email", ng-model="user.email", type='text', placeholder='Email', ng-required='required', autofocus='autofocus')
           input.form-control(name="password", ng-model="user.password", type='password', placeholder='Password', ng-required='required')
+          input(type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;")
       .modal-footer
         button.btn.btn-primary(type='button', ng-click='signin(user, goBackAfterSignin);$hide()') Anmelden
         button.btn.btn-default(type='button', ng-click='abort(user);$hide()') Abbrechen
