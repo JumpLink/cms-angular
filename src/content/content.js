@@ -250,6 +250,10 @@ angular.module('jumplink.cms.content', [
           content.name = generateName(content.title);
         }
 
+        if(!angular.isNumber(content.position)) {
+          content.position = 0;
+        }
+
         if(!content.type || content.type === "") {
           $log.warn("Fix content type not set, set it to dynamic");
           content.type = 'fix';
