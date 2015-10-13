@@ -1,8 +1,9 @@
 angular.module('jumplink.cms.user', [
     'sails.io',
+    'jumplink.cms.sails',
   ])
 
-  .service('UserService', function ($rootScope, $sailsSocket, $log) {
+  .service('UserService', function ($rootScope, $sailsSocket, $log, JLSailsService) {
     var isSubscribed = false;
 
     var save = function(user, callback) {
@@ -96,10 +97,34 @@ angular.module('jumplink.cms.user', [
       }
     };
 
+    /**
+     * find users for any host from database and isert priority from database (or from local.json if no priority is set).
+     * Only for superadmins!
+     */
+    var findByHost = function(host, callback) {
+      // $log.debug("[ThemeService.findByHost]", host);
+      var options = {
+        method: 'post',
+        resultIsArray: true
+      };
+      return JLSailsService.resolve('/user/findbyhost', {host: host}, options, callback);
+    };
+
+    var updateOrCreateByHost = function(host, user, callback) {
+      $log.debug("[UserService.updateOrCreateByHost]", host, routes);
+      var options = {
+        method: 'post',
+        resultIsArray: false
+      };
+      return JLSailsService.resolve('/user/updateOrCreateByHost', {host: host, user: user}, options, callback);
+    };
+
     return {
       save: save,
       subscribe: subscribe,
-      remove: remove
+      remove: remove,
+      findByHost: findByHost,
+      updateOrCreateByHost: updateOrCreateByHost
     };
   })
 ;

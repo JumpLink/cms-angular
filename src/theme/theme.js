@@ -1,7 +1,7 @@
 angular.module('jumplink.cms.theme', [
   'sails.io',
   'ngAsync',
-  'jumplink.cms.sails'
+  'jumplink.cms.sails',
 ])
 
 .service('ThemeService', function ($rootScope, $sailsSocket, $log, $async, JLSailsService) {
