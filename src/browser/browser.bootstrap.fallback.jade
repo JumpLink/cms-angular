@@ -17,7 +17,7 @@ div(style="padding: 40px 15px;text-align: center;")
     .lead
       | Bitte aktivieren Sie JavaScript oder installieren Sie sich einen aktuellen Webbrowser.
   else
-    if useragent.isChrome || useragent.isFirefox || isOpera
+    if useragent && (useragent.isChrome || useragent.isFirefox || useragent.isOpera)
       h3
         | Ihr Webbrowser ist veraltet
       .lead
@@ -28,7 +28,7 @@ div(style="padding: 40px 15px;text-align: center;")
       .lead
         | Bitte installieren Sie einen der folgenden aktuellen Webbrowser.
 .row
-  if useragent.isDesktop
+  if useragent && useragent.isDesktop
     .col-lg-4.text-center
       img(src="/assets/images/browser/firefox_128x128.png", alt="Mozilla Firefox")
       h2
@@ -43,13 +43,13 @@ div(style="padding: 40px 15px;text-align: center;")
       span.label.label-success
         | Empfohlen
     p
-      if useragent.isAndroid
+      if useragent && useragent.isAndroid
         a.btn.btn-primary.btn-lg(href="https://play.google.com/store/apps/details?id=com.android.chrome&hl=de") Installieren
-      else if useragent.isiPhone || useragent.isiPhone || isiPod || isiPad
+      else if useragent && (useragent.isiPhone || useragent.isiPhone || useragent.isiPod || useragent.isiPad)
         a.btn.btn-primary.btn-lg(href="https://itunes.apple.com/de/app/chrome-der-browser-von-google/id535886823?mt=8&uo=4") Installieren
       else
         a.btn.btn-primary.btn-lg(href="https://www.google.com/chrome/?") Herunterladen
-  if useragent.isDesktop
+  if useragent && useragent.isDesktop
     .col-lg-4.text-center
       img(src="/assets/images/browser/opera_128x128.png", alt="Opera")
       h2

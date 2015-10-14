@@ -1,0 +1,185 @@
+/**
+ * importer.less
+ *
+ * By default, new Sails projects are configured to compile this file
+ * from LESS to CSS.  Unlike CSS files, LESS files are not compiled and
+ * included automatically unless they are imported below.
+ *
+ * The LESS files imported below are compiled and included in the order
+ * they are listed.  Mixins, variables, etc. should be imported first
+ * so that they can be accessed by subsequent LESS stylesheets.
+ *
+ * (Just like the rest of the asset pipeline bundled in Sails, you can
+ * always omit, customize, or replace this behavior with SASS, SCSS,
+ * or any other Grunt tasks you like.)
+ */
+
+// Fonts
+// @import url(http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic&subset=latin,cyrillic-ext,cyrillic,greek-ext,greek,latin-ext);
+
+// Core variables and mixins
+@import "./lib/bootstrap/less/variables.less";
+@import "./lib/bootstrap/less/mixins.less";
+
+.default-shadow() {
+  box-shadow: 0 0 7px 0px #888;
+}
+
+.none-shadow() {
+  box-shadow: none;
+}
+
+.cone-of-light(@color) {
+  background: radial-gradient(@color 0%, rgba(0,0,0,0) 70%);
+}
+
+// http://stackoverflow.com/questions/5768998/how-to-flip-background-image-using-css
+.flip-horizontally() {
+  -moz-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  filter: FlipH;
+  -ms-filter: "FlipH";
+}
+
+.flip-vertically() {
+  -moz-transform: scaleY(-1);
+  -o-transform: scaleY(-1);
+  -webkit-transform: scaleY(-1);
+  transform: scaleY(-1);
+  filter: FlipV;
+  -ms-filter: "FlipV";
+}
+
+// Reset and dependencies
+@import "./lib/bootstrap/less/normalize.less";
+@import "./lib/bootstrap/less/print.less";
+@import "./lib/bootstrap/less/glyphicons.less";
+
+// Core CSS
+@import "./lib/bootstrap/less/scaffolding.less";
+
+// gallery
+@import "./src/gallery/gallery.less";
+
+@import "./lib/bootstrap/less/type.less";
+@import "./lib/bootstrap/less/code.less";
+@import "./lib/bootstrap/less/grid.less";
+@import "./lib/bootstrap/less/tables.less";
+@import "./lib/bootstrap/less/forms.less";
+
+// Validation
+@import "./src/validation/validation.less";
+
+// Validation
+@import "./lib/bootstrap/less/buttons.less";
+@import "./src/buttons/buttons.less";
+
+// Components
+@import "./lib/bootstrap/less/component-animations.less";
+@import "./lib/bootstrap/less/dropdowns.less";
+@import "./lib/bootstrap/less/button-groups.less";
+@import "./lib/bootstrap/less/input-groups.less";
+@import "./lib/bootstrap/less/navs.less";
+@import "./lib/bootstrap/less/navbar.less";
+
+// toolbar
+@import "./src/toolbar/toolbar.less";
+
+@import "./lib/bootstrap/less/breadcrumbs.less";
+@import "./lib/bootstrap/less/pagination.less";
+@import "./lib/bootstrap/less/pager.less";
+@import "./lib/bootstrap/less/labels.less";
+@import "./lib/bootstrap/less/badges.less";
+@import "./lib/bootstrap/less/jumbotron.less";
+@import "./lib/bootstrap/less/thumbnails.less";
+@import "./lib/bootstrap/less/alerts.less";
+@import "./lib/bootstrap/less/progress-bars.less";
+@import "./lib/bootstrap/less/media.less";
+@import "./lib/bootstrap/less/list-group.less";
+@import "./lib/bootstrap/less/panels.less";
+@import "./lib/bootstrap/less/responsive-embed.less";
+@import "./lib/bootstrap/less/wells.less";
+@import "./lib/bootstrap/less/close.less";
+
+// Components w/ JavaScript
+@import "./lib/bootstrap/less/modals.less";
+@import "./lib/bootstrap/less/tooltip.less";
+@import "./lib/bootstrap/less/popovers.less";
+//@import "./lib/bootstrap/less/carousel.less";
+
+// Utility classes
+@import "./lib/bootstrap/less/utilities.less";
+@import "./lib/bootstrap/less/responsive-utilities.less";
+
+// angular motion
+@import "./lib/angular-motion/src/fade/fade.less";
+@import "./lib/angular-motion/src/flip/flip.less";
+@import "./lib/angular-motion/src/slide/slide.less";
+@import "./lib/angular-motion/src/fade-and-slide/fade-and-slide.less";
+@import "./lib/angular-motion/src/fade-and-scale/fade-and-scale.less";
+
+// carousel
+@import "./src/carousel/carousel.less";
+
+// angular-medium-editor
+@import (less) "./lib/medium-editor/dist/css/medium-editor.css";
+@import (less) "./lib/medium-editor/dist/css/themes/bootstrap.css";
+@import "./src/medium-editor/medium-editor.less";
+
+// bootstrapAdditions
+@import "./lib/bootstrap-additions/src/alert/alert";
+
+// sidebar
+@import "./src/sidebar/sidebar.less";
+
+@import "./lib/bootstrap-additions/src/callout/callout";
+@import "./lib/bootstrap-additions/src/datepicker/datepicker";
+@import "./lib/bootstrap-additions/src/modal/modal";
+@import "./lib/bootstrap-additions/src/popover/popover";
+@import "./lib/bootstrap-additions/src/timepicker/timepicker";
+@import "./lib/bootstrap-additions/src/tooltip/tooltip";
+
+// AngularMotion
+@import (less) "./lib/angular-motion/dist/angular-motion.css";
+
+//Font Awesome
+@import "./lib/font-awesome/less/font-awesome.less";
+
+// leaflet.js - AngularJS directive to embed an interact with maps managed by Leaflet library: https://github.com/tombatossals/angular-leaflet-directive
+@import (less) "./lib/leaflet/dist/leaflet.css";
+@import (less) "./lib/Leaflet.label/dist/leaflet.label.css";
+
+// toaster
+@import "./src/toaster/toaster.less";
+
+// Ace
+@import "./src/ace-editor/ace-editor.less";
+
+// webodf
+@import "./src/webodf/webodf.less"; 
+
+// signin
+@import "./src/signin/signin.less"; 
+
+// masonry
+@import "./src/masonry/masonry.less"; 
+
+// general
+@import "./src/timeline/timeline.less"; 
+
+// drag-and-drop
+@import "./src/drag-and-drop/drag-and-drop.less"; 
+
+// toggle switch
+@import "./lib/angular-toggle-switch/style/bootstrap3/angular-toggle-switch-bootstrap-3.less";
+
+// blog
+@import "./src/blog/blog.bootstrap.less"; 
+
+// columns
+@import "./src/utilities/columns.bootstrap.less"; 
+
+// general
+@import "./src/general/general.less"; 

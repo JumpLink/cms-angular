@@ -3,9 +3,9 @@ nav.navbar.navbar-inverse.navbar-fixed-bottom(role="administration", ng-show="au
     .navbar-left
       p.navbar-text
         span(ng-show="$root.user.name")
-          {{$root.user.name+"  "}}
+          | {{$root.user.name+"  "}}
           small
-            {{$root.user.role}}
+            | {{$root.user.role}}
         span(ng-hide="$root.user.name") Administration
     form.navbar-from.navbar-right(ng-show="allowActions")
       .btn-group.navbar-btn

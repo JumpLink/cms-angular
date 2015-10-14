@@ -1,20 +1,29 @@
-
 {
-    "name": "jumplink-cms-angular",
-    "version": "0.0.1",
-    "main": "./dist/jumplink-cms-angular.min.js",
-    "homepage": "https://github.com/JumpLink/cms-angular",
-    "ignore": ["examples"],
-    "dependencies": {
-        "angular-strap": "~2.3.1"
-    },
-    "devDependencies": {
-    },
-    "keywords": [
-        "angular",
-        "cms",
-        "jumplink",
-        "module",
-        "sails"
-    ]
+  "name": "jumplink-cms-angular",
+  "version": "0.0.2",
+  "main": "./dist/jumplink-cms-angular.min.js",
+  "homepage": "https://github.com/JumpLink/cms-angular",
+  "ignore": [
+    "examples"
+  ],
+  "dependencies": {
+    "angular-strap": "~2.3.1"
+  },
+  "devDependencies": {
+    "bootstrap": "~3.3.5",
+    "angular-motion": "~0.4.3",
+    "medium-editor": "~5.8.3",
+    "bootstrap-additions": "JumpLink/bootstrap-additions#master",
+    "font-awesome": "~4.4.0",
+    "Leaflet.label": "~0.2.1",
+    "leaflet": "~0.7.5",
+    "angular-toggle-switch": "angular-bootstrap-toggle-switch#~0.5.5"
+  },
+  "keywords": [
+    "angular",
+    "cms",
+    "jumplink",
+    "module",
+    "sails"
+  ]
 }
