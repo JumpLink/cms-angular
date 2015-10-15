@@ -1,0 +1,30 @@
+.default-shadow() {
+  box-shadow: 0 0 7px 0px #888;
+}
+
+.none-shadow() {
+  box-shadow: none;
+}
+
+.cone-of-light(@color) {
+  background: radial-gradient(@color 0%, rgba(0,0,0,0) 70%);
+}
+
+// http://stackoverflow.com/questions/5768998/how-to-flip-background-image-using-css
+.flip-horizontally() {
+  -moz-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  filter: FlipH;
+  -ms-filter: "FlipH";
+}
+
+.flip-vertically() {
+  -moz-transform: scaleY(-1);
+  -o-transform: scaleY(-1);
+  -webkit-transform: scaleY(-1);
+  transform: scaleY(-1);
+  filter: FlipV;
+  -ms-filter: "FlipV";
+}
