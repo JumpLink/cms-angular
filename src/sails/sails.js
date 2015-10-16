@@ -31,7 +31,7 @@ angular.module('jumplink.cms.sails', [
           }
           return deferred.resolve(null);
         }
-        if (!options.resultIsArray && data.data instanceof Array) {
+        if (!options.resultIsArray && angular.isArray(data.data)) {
           data.data = data.data[0];
           $log.warn(errors[1]);
         }

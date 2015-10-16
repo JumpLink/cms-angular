@@ -120,6 +120,19 @@ angular.module('jumplink.cms.routes', [
       return JLSailsService.resolve('/routes/find', query, options, callback);
     };
 
+    var findOne = function(query, callback) {
+      // $log.debug("[RoutesService.find]");
+      var options = {
+        method: 'post',
+        resultIsArray: false
+      };
+      return JLSailsService.resolve('/routes/findOne', query, options, callback);
+    };
+
+
+    /**
+     * For superadminsd
+     */
     var findByHost = function(query, callback) {
       // $log.debug("[RoutesService.findByHost]");
       var options = {
@@ -175,6 +188,7 @@ angular.module('jumplink.cms.routes', [
       remove: remove,
       destroy: remove, // Alias
       find: find,
+      findOne: findOne,
       findByHost: findByHost,
       updateOrCreate: updateOrCreate,
       updateOrCreateByHost: updateOrCreateByHost,
