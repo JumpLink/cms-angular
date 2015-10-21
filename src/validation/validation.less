@@ -8,28 +8,43 @@
   }
 }
 
-.form-group input.form-control.ng-invalid.ng-dirty {
+.ng-invalid.ng-dirty {
+  .has-error .form-control;
   .form-group-validation(@state-danger-text; @state-danger-bg);
 }
 
-.form-group input.form-control.ng-valid.ng-dirty {
+.ng-valid.ng-dirty {
+  .has-success .form-control;
   .form-group-validation(@state-success-text; @state-success-bg);
 }
 
-label {
+label.control-label {
+  &.absolute-control-label-bottom {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    margin-top: -25px;
+  }
   &.validation {
     margin-top: 5px;
     margin-bottom: 0;
   }
-  &.danger {
-    color: @state-danger-text;
+  &.danger, &.has-danger, &.has-error {
+    // color: @state-danger-text;
+    .has-error .control-label;
   }
 
-  &.warning {
-    color: @state-warning-text;
+  &.warning, &.has-warning {
+    // color: @state-warning-text;
+    .has-warning .control-label;
   }
 
-  &.success {
-    color: @state-success-text;
+  &.success, &.has-success {
+    // color: @state-success-text;
+    .has-success .control-label;
   }
+}
+
+.has-absolute-control-label-bottom {
+  padding-bottom: 25px;
 }

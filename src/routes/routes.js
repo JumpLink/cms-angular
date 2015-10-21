@@ -1,8 +1,8 @@
 angular.module('jumplink.cms.routes', [
+  'ui.router',                 // AngularUI Router: https://github.com/angular-ui/ui-router
   'jumplink.cms.sails',
   'jumplink.cms.sortable',
   'jumplink.cms.utilities',
-  'ui.router',                 // AngularUI Router: https://github.com/angular-ui/ui-router
 ])
 .provider('jlRoutes', function jlRoutesProvider($stateProvider, $urlRouterProvider, $locationProvider) {
 
@@ -99,7 +99,7 @@ angular.module('jumplink.cms.routes', [
     return result;
   };
 })
-.service('RoutesService', function ($rootScope, JLSailsService, $log, SortableService) {
+.service('RoutesService', function ($rootScope, JLSailsService, $log, SortableService, UtilityService) {
   var create = function(data) {
     if(!data || !data.match) {
       data.match = "";
@@ -254,6 +254,28 @@ angular.module('jumplink.cms.routes', [
     return JLSailsService.resolve('/Routes/updateOrCreateEachByHost', {host: host, routes: routes}, options, callback);
   };
 
+  var generateObjectnameFromStatename = function (statename) {
+    $log.debug("[RoutesController.generateObjectnameFromStatename]", statename);
+    var objectname = "";
+    var keys = statename.split('.');
+    for (var k = 0; k < keys.length; k++) {
+      objectname += UtilityService.capitalizeFirstLetter(keys[k]);
+    }
+    objectname = UtilityService.lowercaseFirstLetter(objectname);
+    return objectname;
+  };
+
+  var generateObjectnameFromUrl = function (url) {
+    var objectname = "";
+    var keys = url.split('/');
+    for (var k = 0; k < keys.length; k++) {
+      objectname += UtilityService.capitalizeFirstLetter(keys[k]);
+    }
+    objectname = UtilityService.lowercaseFirstLetter(objectname);
+    $log.debug("[RoutesController.generateObjectnameFromUrl]", url, keys, objectname, objectname.length);
+    return objectname;
+  };
+
   return {
     create: create,
     append: append,
@@ -271,5 +293,7 @@ angular.module('jumplink.cms.routes', [
     updateOrCreateEach: updateOrCreateEach,
     updateOrCreateEachByHost: updateOrCreateEachByHost,
     saveEachByHost: updateOrCreateEachByHost, // Alias
+    generateObjectnameFromStatename: generateObjectnameFromStatename,
+    generateObjectnameFromUrl: generateObjectnameFromUrl,
   };
 });
