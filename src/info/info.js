@@ -45,8 +45,23 @@ angular.module('jumplink.cms.info', [
     return info('/cms/infoadmin', callback);
   };
 
+  var restart = function(callback) {
+    return $sailsSocket.post('/cms/restart').then (function (data) {
+      $log.debug("[CmsService.restart]", data);
+      return callback(null, data);
+    }, function error (resp){
+      $log.error("[CmsService.restart]", resp);
+      return callback(resp);
+    });
+  };
+
+
+  /**
+   * Public functions
+   */
   return {
     infoUser: infoUser,
-    infoAdmin: infoAdmin
+    infoAdmin: infoAdmin,
+    restart: restart,
   };
 });

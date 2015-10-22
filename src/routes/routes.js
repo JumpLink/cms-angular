@@ -46,14 +46,19 @@ angular.module('jumplink.cms.routes', [
           // set state options
           if(angular.isDefined(routes[i].objectName) && angular.isDefined(routeOptions[routes[i].objectName])) {
             // console.log(routeOptions[routes[i].objectName]);
-            options.resolve = routeOptions[routes[i].objectName].resolve;
-            options.views = routeOptions[routes[i].objectName].views;
+            if(angular.isObject(routeOptions[routes[i].objectName].resolve)) {
+              options.resolve = routeOptions[routes[i].objectName].resolve;
+            }
+            if(angular.isObject(routeOptions[routes[i].objectName].views)) {
+              options.views = routeOptions[routes[i].objectName].views;
+            }
+            
           } else {
             console.error("objectName "+routes[i].objectName+" not found for route "+routes[i]);
           } 
         }
         // If options are set, init state
-        if(angular.isDefined(options.url) && angular.isDefined(options.resolve) && angular.isDefined(options.views)) {
+        if(angular.isDefined(options.url) && angular.isDefined(options.views)) {
           // console.log("New Route", routes[i].state.name, options);
           $stateProvider.state(routes[i].state.name, options);
         }
@@ -100,52 +105,58 @@ angular.module('jumplink.cms.routes', [
   };
 })
 .service('RoutesService', function ($rootScope, JLSailsService, $log, SortableService, UtilityService) {
+
   var create = function(data) {
-    if(!data || !data.match) {
+    $log.debug("[RoutesService.create] data", data);
+    if(!angular.isObject(data)) {
+      data = {};
+    }
+    if(!angular.isString(data.match)) {
       data.match = "";
     }
-    if(!data || !data.title) {
+    if(!angular.isString(data.title)) {
       data.title = "";
     }
-    if(!data.main) {
+    if(data.main !== true && data.main !== false) {
       data.main = false;
     }
-    if(!data || !data.state) {
-      data.state = {};
-    }
-    if(!data || !data.url) {
+    if(!angular.isString(data.url)) {
       data.url = "";
     }
-    if(!data || !data.alternativeUrls) {
+    if(!angular.isArray(data.alternativeUrls)) {
       data.alternativeUrls = [];
     }
-    if(!data.state.name) {
+    if(angular.isUndefined(data.state) || !angular.isObject(data.state)) {
+      data.state = {};
+    }
+    if(!angular.isString(data.state.name)) {
       data.state.name = "";
     }
-    if(!data.state.customstate) {
+    if(data.state.customstate !== true && data.state.customstate !== false) {
       data.state.customstate = false;
     }
-    if(!data.state.url) {
+    if(!angular.isString(data.state.url)) {
       data.state.url = "";
     }
-    if(!data.state.views) {
+    if(!angular.isString(data.state.views)) {
       data.state.views = "";
     }
-    if(!data.state.resolve) {
+    if(!angular.isString(data.state.resolve)) {
       data.state.resolve = "";
     }
-    if(!data || !data.fallback) {
+    if(!angular.isObject(data.fallback)) {
       data.fallback = {};
     }
-    if(!data.fallback.url) {
+    if(!angular.isString(data.fallback.url)) {
       data.fallback.url = "";
     }
     return data;
   };
 
   var append = function(routes, data, callback) {
+    $log.debug("[RoutesService] data before", data);
     data = create(data);
-    $log.debug("[RoutesService] data", data);
+    $log.debug("[RoutesService] data after", data);
     SortableService.append(routes, data, callback);
   };
 

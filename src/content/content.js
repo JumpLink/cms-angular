@@ -4,9 +4,10 @@ angular.module('jumplink.cms.content', [
     'ui.ace',
     'sails.io',
     'jumplink.cms.sortable',
-    'ngFocus'
+    'ngFocus',
+    'jumplink.cms.utilities',
   ])
-  .service('ContentService', function ($rootScope, $log, $sailsSocket, $filter, $modal, SortableService, UtilityService, focus) {
+  .service('ContentService', function ($rootScope, $log, $sailsSocket, $filter, $modal, SortableService, UtilityService, focus, $async) {
 
     var showHtml = false;
     var editModal = null;
@@ -117,7 +118,7 @@ angular.module('jumplink.cms.content', [
         data.type = "dynamic";
       }
       if(!data || !data.page) {
-        callback("Page not set.");
+        $log.error("[ContentService] Page not set.");
       }
       return data;
     };
@@ -358,6 +359,27 @@ angular.module('jumplink.cms.content', [
         });
       });
     };
+    
+    var saveParallel = function(page, logger, options, obj, callback) {
+      $async.parallel(obj, function(err, results) {
+        if(err) {
+          $log.error("Error: On save content!", err);
+          logger('error', 'Seiteninhalt konnte nichtgespeichert werden', err);
+          if(angular.isFunction(callback)) {
+            return callback(err);
+          }
+          return err;
+        }
+        if(options.applyResults) {
+          options.scope = angular.extend(options.scope, results);
+        }
+        logger('success', 'Seiteninhalt wurde gespeichert', "");
+        if(angular.isFunction(callback)) {
+          return callback(null, results);
+        }
+        return results;
+      });
+    };
 
     var findOne = function(page, name, type, callback, next) {
       var errors = [
@@ -478,10 +500,7 @@ angular.module('jumplink.cms.content', [
     };
 
     /**
-     * Resolve function for angular ui-router.
-     * name, callback and next parameters are optional.
-     * use next to transform the result before you get it back
-     * use callback if you want not use promise
+     *
      */
     var find = function(page, name, type, callback, next) {
       //- get soecial content (one)
@@ -514,6 +533,7 @@ angular.module('jumplink.cms.content', [
       fixEach: fixEach,
       save: save,
       saveOne: saveOne,
+      saveParallel: saveParallel,
       find: find,
       resolve: find, // alias
       findOne: findOne,

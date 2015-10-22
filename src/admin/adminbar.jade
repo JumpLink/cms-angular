@@ -18,7 +18,7 @@ nav.navbar.navbar-inverse.navbar-fixed-bottom(role="administration", ng-show="au
         button.btn.btn-success(ng-if="refresh", title="Aktualisieren", ng-click="refresh()")
           i.fa.fa-refresh
         button.btn.btn-success(ng-if="toogleHtml", title="HTML-Modus umschalten", ng-click="toogleHtml()")
-          i.fa.fa-html5
+          i.fa.fa-code
         button.btn.btn-primary(ng-if="save", title="Speichern", ng-click="save()")
           i.fa.fa-floppy-o
       button.btn.btn-default.navbar-btn(title="Einstellungen", bs-dropdown="adminSettingDropdown", ng-click="$event.stopPropagation();", data-template-url="/views/modern/dropdown.jade", data-placement="top", data-html="true")

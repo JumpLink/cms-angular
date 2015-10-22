@@ -1,0 +1,20 @@
+//- Own Contents
+.row(ng-repeat="content in contents | orderBy:'position'")
+  .col-md-12
+    p.btn-group.pull-right(ng-if="authenticated")
+      button.btn.btn-warning(ng-click="moveBackward($index, content)", ng-disabled="$index <= 0", title="Block nach oben verschieben"): i.fa.fa-backward.fa-rotate-90
+      button.btn.btn-danger(ng-click="remove($index, content)", title="Block löschen"): i.fa.fa-trash
+      button.btn.btn-warning(ng-click="edit($index, content)", title="Block bearbeiten"): i.fa.fa-edit
+      //- button.btn.btn-primary(ng-click="save($index, content)", title="Speichern"): i.fa.fa-floppy-o
+      button.btn.btn-success(ng-click="toggleHtml($index, content)", title="HTML Modus"): i.fa.fa-code
+      button.btn.btn-warning(ng-click="moveForward($index, content)", ng-disabled="$index >= contents.length - 1", title="Block nach unten verschieben"): i.fa.fa-forward.fa-rotate-90
+    h2.page-header(ng-if="$root.authenticated", id="{{content.name}}", medium-editor, ng-model="content.title", options='{"placeholder": "Titel eingeben", "disableToolbar": true, "paste.forcePlainText": true, "disableReturn": true}')
+    h2.page-header(ng-if="!$root.authenticated", id="{{content.name}}", ng-bind-html="content.title")
+    jl-content(data-authenticated="authenticated", data-content="content.content", data-html="html || content.html")
+.row(ng-if="authenticated")
+  .col-md-12
+    hr
+    p.btn-group.pull-right
+      button.btn.btn-warning(ng-click="add()", title="Weiteren Block hinzufügen"): i.fa.fa-plus
+      button.btn.btn-success(ng-click="refresh()", title="Blöcke erneuern"): i.fa.fa-refresh
+      button.btn.btn-primary(ng-click="save()", title="Blöcke speichern"): i.fa.fa-save

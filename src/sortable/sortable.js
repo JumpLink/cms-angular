@@ -59,6 +59,7 @@ angular.module('jumplink.cms.sortable', [
      * Append a new object to array, check unique key value if set
      */
     var append = function(objects, data, cb, unique, uniqueKey) {
+      $log.debug("[SortableService.append] data", data);
       var errors = [
         "Unique key '"+uniqueKey+"' already exist"
       ];
@@ -91,8 +92,9 @@ angular.module('jumplink.cms.sortable', [
       new_object = {
         position: new_position,
       };
-      angular.extend(new_object, data);
-      // $log.debug("new_object", new_object);
+
+      new_object = angular.extend(new_object, data);
+      $log.debug("[SortableService.append] new_object", new_object);
 
       if(unique && new_object[uniqueKey]) {
         uniqueIndex = UtilityService.findKeyValue(objects, uniqueKey, new_object[uniqueKey]);

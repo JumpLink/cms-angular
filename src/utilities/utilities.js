@@ -24,6 +24,21 @@ angular.module('jumplink.cms.utilities', [
     };
 
     /**
+     * @see: http://stackoverflow.com/questions/3068534/getting-javascript-object-key-list
+     */
+    var getKeys = function (obj) {
+      var keys = [];
+      if(!angular.isObject(obj)) {
+        console.error("[UtilityService.getKeys] is not an Object", obj);
+        return keys;
+      }
+      for(var k in obj) {
+        keys.push(k);
+      }
+      return keys;
+    };
+
+    /**
      * Capitalize the first character of a string, but not change the case of any of the other letters.
      *
      * @see http://stackoverflow.com/questions/1026069/capitalize-the-first-letter-of-string-in-javascript
@@ -39,6 +54,7 @@ angular.module('jumplink.cms.utilities', [
     return {
       invertOrder: invertOrder,
       findKeyValue: findKeyValue,
+      getKeys: getKeys,
       capitalizeFirstLetter: capitalizeFirstLetter,
       lowercaseFirstLetter: lowercaseFirstLetter,
     };
