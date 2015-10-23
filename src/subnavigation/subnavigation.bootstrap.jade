@@ -1,0 +1,5 @@
+.bs-sidebar(hidden-print, role="complementary", bs-affix, data-offset-top="-50")
+  ul.nav.bs-sidenav
+    li(ng-repeat="nav in navs", ng-if="nav.target && nav.name", data-target="{{'#'+nav.target}}", bs-scrollspy, data-offset="70")
+      a(ng-click="goTo(nav.target)") {{nav.name}}
+  button.btn.btn-warning.pull-right(ng-if="authenticated", ng-click="edit(navs)", title="Navigation bearbeiten"): i.fa.fa-edit

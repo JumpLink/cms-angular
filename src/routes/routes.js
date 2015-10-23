@@ -12,6 +12,16 @@ angular.module('jumplink.cms.routes', [
 
   this.state = $stateProvider.state;
 
+  this.when = function (url1, url2) {
+    $urlRouterProvider.when(url1, url2);
+  };
+
+  this.setLayouts = function(layouts) {
+    for (var stateName in layouts ) {
+      this.state(stateName, layouts[stateName]);
+    }
+  };
+
   this.setRoutes = function(routes, routeOptions) {
     /**
      * Load optional addional states.
@@ -66,7 +76,7 @@ angular.module('jumplink.cms.routes', [
         if(angular.isArray(routes[i].alternativeUrls)) {
           for (var a = 0; a < routes[i].alternativeUrls.length; a++) {
             // e.g. $urlRouterProvider.when('/referenzen', '/referenzen/uebersicht');
-            // console.log("New redirect: "+routes[i].alternativeUrls[a]+" -> "+routes[i].url);
+            console.log("New redirect: "+routes[i].alternativeUrls[a]+" -> "+routes[i].url);
             $urlRouterProvider.when(routes[i].alternativeUrls[a], routes[i].url);
           }
         }

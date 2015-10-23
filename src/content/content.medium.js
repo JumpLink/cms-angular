@@ -63,7 +63,7 @@ angular.module('jumplink.cms.content.medium', [
     }
   };
 })
-.directive('jlContentBlocks', function ($compile, $window, mediumOptions, ContentMediumService) {
+.directive('jlContentBlocks', function ($compile, $window, mediumOptions, ContentMediumService, SubnavigationService, HistoryService) {
 
   return {
     restrict: 'E',
@@ -72,11 +72,17 @@ angular.module('jumplink.cms.content.medium', [
       authenticated : "=",
       html: "=",
       contents: "=",
+      navs: "=?",
       afterRefresh: "=?",
       afterSave: "=?",
       afterRemove: "=?",
       afterEdit: "=?",
       afterAdd: "=?",
+      subnavigation: "=?",
+      afterSaveNav: "=?",
+      afterRemoveNav: "=?",
+      afterEditNav: "=?",
+      afterAddNav: "=?",
       logger: "=",
       page: "=?",
       mediumOptions: "=?",
@@ -88,24 +94,33 @@ angular.module('jumplink.cms.content.medium', [
     controller: function ($rootScope, $scope, ContentService, $log, $state) {
 
       ContentService.setEditModal($scope);
+      SubnavigationService.setEditModal($scope);
+      $scope.goTo = HistoryService.goToHashPosition;
+      ContentService.subscribe();
+      SubnavigationService.subscribe();
+      // SubnavigationService.resizeOnImagesLoaded();
 
       if(angular.isUndefined($scope.page)) {
         $scope.page = $state.current.name;
       }
 
+      if(angular.isUndefined($scope.subnavigation)) {
+        $scope.subnavigation = false;
+      }
+
       if(angular.isUndefined($scope.afterRefresh)) {
         $scope.afterRefresh = function (err, result) {
           if(err) {
-            return $scope.logger('error', "Inhaltsblöcke konnten nicht erneuert werden!", err);
+            return $scope.logger('error', "Inhaltsblock wurde nicht erneuert!", err);
           }
-          $scope.logger('success', "Inhaltsblöcke erneuert!", "");
+          $scope.logger('success', "Inhaltsblock erneuert!", "");
         };
       }
 
       if(angular.isUndefined($scope.afterSave)) {
         $scope.afterSave = function (err, result) {
           if(err) {
-            return $scope.logger('error', "Inhaltsblock konnte nicht gespeichert werden!", err);
+            return $scope.logger('error', "Inhaltsblock wurde nicht gespeichert!", err);
           }
           $scope.logger('success', "Inhaltsblock gespeichert!", result.title);
         };
@@ -114,7 +129,7 @@ angular.module('jumplink.cms.content.medium', [
       if(angular.isUndefined($scope.afterRemove)) {
         $scope.afterRemove = function (err, result) {
           if(err) {
-            return $scope.logger('error', "Inhaltsblock konnte nicht entfernt werden!", err);
+            return $scope.logger('error', "Inhaltsblock wurde nicht entfernt!", err);
           }
           $scope.logger('success', "Inhaltsblock entfernt!", result.title);
         };
@@ -123,7 +138,7 @@ angular.module('jumplink.cms.content.medium', [
       if(angular.isUndefined($scope.afterEdit)) {
         $scope.afterEdit = function (err, result) {
           if(err) {
-            return $scope.logger('error', "Inhaltsblock konnte nicht bearbeitet werden!", err);
+            return $scope.logger('error', "Inhaltsblock wurde nicht bearbeitet!", err);
           }
           $scope.logger('success', "Inhaltsblock bearbeitet!", result.title);
         };
@@ -132,11 +147,21 @@ angular.module('jumplink.cms.content.medium', [
       if(angular.isUndefined($scope.afterAdd)) {
         $scope.afterAdd = function (err, result) {
           if(err) {
-            return $scope.logger('error', "Inhaltsblock konnte nicht hinzugefügt werden!", err);
+            return $scope.logger('error', "Inhaltsblock wurde nicht hinzugefügt!", err);
           }
           $scope.logger('success', "Inhaltsblock hinzugefügt!", result.title);
         };
       }
+
+      if(angular.isUndefined($scope.afterSaveNav)) {
+        $scope.afterSaveNav = function (err, result) {
+          if(err) {
+            return $scope.logger('error', "Navigation wurde nicht gespeichert!", err);
+          }
+          $scope.logger('success', "Navigation gespeichert!", result.title);
+        };
+      }
+
 
       $scope.add = function() {
         var errors = [
@@ -215,8 +240,10 @@ angular.module('jumplink.cms.content.medium', [
           return false;
         }
         ContentService.save($scope.contents, $scope.page, $scope.afterSave);
+        if($scope.subnavigation) {
+          SubnavigationService.save($scope.navs, $scope.page, $scope.afterSaveNav);
+        }
       };
-
     }
   };
 });

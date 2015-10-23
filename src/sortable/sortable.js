@@ -1,12 +1,16 @@
 angular.module('jumplink.cms.sortable', [
     'jumplink.cms.utilities'
   ])
-  .service('SortableService', function (UtilityService, $log) {
+  .service('SortableService', function (UtilityService, $log, $filter) {
     var resetPosition = function (array) {
       for (var i = array.length - 1; i >= 0; i--) {
         array[i].position = i+1;
       }
       return array;
+    };
+
+    var sort = function(objects) {
+      return $filter('orderBy')(objects, 'position');
     };
 
     /*
@@ -211,6 +215,7 @@ angular.module('jumplink.cms.sortable', [
 
     return {
       resetPosition: resetPosition,
+      sort: sort,
       swap: swap,
       moveObjectToAnotherArray: moveObjectToAnotherArray,
       move: move,

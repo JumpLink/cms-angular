@@ -12,7 +12,8 @@ angular.module('jumplink.cms.toolbar', [
       shorttitle: "=",
       fluid: "=",
       position: "=",
-      filter: "=", 
+      filter: "=",
+      subnavigation: "=?",
     },
     link: function ($scope, $element, $attrs) {
 

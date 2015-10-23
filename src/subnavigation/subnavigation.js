@@ -216,4 +216,144 @@ angular.module('jumplink.cms.subnavigation', [
     save: save,
     resolve: resolve
   };
+})
+
+.directive('jlSubnavigation', function ($compile, $window, SubnavigationService, HistoryService) {
+
+  return {
+    restrict: 'E',
+    templateUrl: '/views/modern/subnavigation.bootstrap.jade',
+    scope: {
+      authenticated : "=",
+      navs: "=",
+      afterSave: "=?",
+      afterRemove: "=?",
+      afterEdit: "=?",
+      afterAdd: "=?",
+      logger: "=",
+      page: "=?"
+
+    },
+    link: function ($scope, $element, $attrs) {
+    },
+    controller: function ($rootScope, $scope, ContentService, $log, $state) {
+
+      SubnavigationService.setEditModal($scope);
+      $scope.goTo = HistoryService.goToHashPosition;
+      SubnavigationService.subscribe();
+      // SubnavigationService.resizeOnImagesLoaded();
+
+      if(angular.isUndefined($scope.page)) {
+        $scope.page = $state.current.name;
+      }
+
+      if(angular.isUndefined($scope.afterSave)) {
+        $scope.afterSave = function (err, result) {
+          if(err) {
+            return $scope.logger('error', "Navigation wurde nicht gespeichert!", err);
+          }
+          $scope.logger('success', "Navigation gespeichert!", result.title);
+        };
+      }
+
+      if(angular.isUndefined($scope.afterRemove)) {
+        $scope.afterRemove = function (err, result) {
+          if(err) {
+            return $scope.logger('error', "Navigation wurde nicht entfernt!", err);
+          }
+          $scope.logger('success', "Navigation entfernt!", result.title);
+        };
+      }
+
+      if(angular.isUndefined($scope.afterEdit)) {
+        $scope.afterEdit = function (err, result) {
+          if(err) {
+            return $scope.logger('error', "Navigation wurde nicht bearbeitet!", err);
+          }
+          $scope.logger('success', "Navigation bearbeitet!", result.title);
+        };
+      }
+
+      if(angular.isUndefined($scope.afterAdd)) {
+        $scope.afterAdd = function (err, result) {
+          if(err) {
+            return $scope.logger('error', "Navigation wurde nicht hinzugefügt!", err);
+          }
+          $scope.logger('success', "Navigation hinzugefügt!", result.title);
+        };
+      }
+
+      $scope.add = function() {
+        if(!$scope.authenticated) {
+          return false;
+        }
+        SubnavigationService.add($scope.navs, {page:page}, $scope.afterAdd);
+      };
+      $scope.addNav = $scope.add; // alias
+
+      $scope.moveForward = function(index, nav) {
+        SortableService.moveForward(index, $scope.navs, function(err, navs) {
+          if(err) {
+            $log.error("Error: On move subnavigation forward!", err);
+            return err;
+          }
+          $scope.navs = navs;
+        });
+      };
+      $scope.moveForwardNav = $scope.moveForward; // alias
+
+      $scope.moveBackward = function(index, nav) {
+        SortableService.moveBackward(index, $scope.navs, function(err, navs) {
+          if(err) {
+            $log.error("Error: On move content backward!", err);
+            return err;
+          }
+          $scope.navs = navs;
+        });
+      };
+      $scope.moveBackwardNav = $scope.moveBackward; // alias
+
+      $scope.edit = function(navs) {
+        if(!$scope.authenticated) {
+          return false;
+        }
+        SubnavigationService.edit(navs, $scope.afterEdit);
+      };
+      $scope.editNavs = $scope.edit; // alias
+
+      $scope.remove = function(index, nav) {
+        if(!$scope.authenticated) {
+          return false;
+        }
+        SubnavigationService.remove($scope.navs, index, nav, page, $scope.afterRemove);
+      };
+      $scope.removeNav = remove; // alias
+
+      $scope.save = function () {
+        SubnavigationService.save($scope.navs, page, $scope.afterSave);
+      };
+
+
+      // TODO move to own drag and drops sortable navigation directive 
+      $scope.onDragOnComplete = function(index, nav, evt) {
+        if(nav === null) {
+          $log.debug("*click*", index);
+        }
+        $log.debug("onDragOnComplete, nav:", nav, "index", index);
+      };
+      $scope.onDragOnNavComplete = $scope.onDragOnComplete; // alias
+
+      $scope.onDropOnComplete = function(dropnavindex, dragnav, event) {
+        SortableService.dropMove($scope.navs, dropnavindex, dragnav, event, function(err, navs) {
+          $scope.navs = navs;
+        });
+      };
+      $scope.onDropOnNavComplete = $scope.onDropOnComplete; // alias
+
+      $scope.onDropOnAreaComplete = function(nav, evt) {
+        var index = $scope.navs.indexOf(nav);
+      };
+
+    }
+  };
 });
