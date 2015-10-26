@@ -1,0 +1,35 @@
+each post in blogPosts
+  .news.blogs
+    .panel.panel-primary
+      .panel-heading
+        h2.panel-title!= post.title
+      .panel-body
+        div!= post.content
+      if post.attachments && post.attachments.length > 0
+        ul.list-group.attachments
+          li.list-group-item
+            .row
+              .row-height
+                each attachment, index in post.attachments
+                  .col-sm-12.col-md-3.col-md-height
+                    .inside.inside-full-height
+                      - var attachment = attachment
+                      - var attachmentIndex = index
+                      - var parent = post
+                      - var path = config.paths.blog
+                      - var centerImage = true
+                      include ../attachment/attachment.bootstrap.fallback.jade
+      .panel-footer
+        if post.createdAt
+          - post.createdAt = moment(post.createdAt).calendar()
+          .createdat.pull-left
+            | Erstellt #{post.createdAt} 
+        if post.author
+          .author.pull-left(ng-show="")
+            | &nbsp;von #{post.author}
+        if post.updatedAt
+          - post.updatedAt = moment(post.updatedAt).calendar()
+          if (post.createdAt != post.updatedAt)
+            .updatedat.pull-right
+              | Geändert #{post.updatedAt}
+        .clearfix

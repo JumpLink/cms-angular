@@ -114,7 +114,7 @@ angular.module('jumplink.cms.routes', [
     return result;
   };
 })
-.service('RoutesService', function ($rootScope, JLSailsService, $log, SortableService, UtilityService) {
+.service('RoutesService', function ($rootScope, $download, JLSailsService, $log, SortableService, UtilityService) {
 
   var create = function(data) {
     $log.debug("[RoutesService.create] data", data);
@@ -239,6 +239,31 @@ angular.module('jumplink.cms.routes', [
     return JLSailsService.resolve('/Routes/findByHost', query, options, callback);
   };
 
+  /**
+   * For superadminsd
+   */
+  var exportByHost = function(host, download, callback) {
+    // $log.debug("[RoutesService.findByHost]");
+    var options = {
+      method: 'post',
+      resultIsArray: true
+    };
+    
+    return JLSailsService.resolve('/Routes/exportByHost', {host: host}, options, function(err, data) {
+      $log.debug("[RoutesService.exportByHost]", err, data);
+      if(err) {
+        if(download) {
+          $download(JSON.stringify(data), "error.txt", "text/plain");
+        }
+        return callback(err);
+      }
+      if(download) {
+        $download(JSON.stringify(data), "routes.json", "text/json");
+      }
+      return callback(err, data);
+    });
+  };
+
   var updateOrCreate = function(route, callback) {
     $log.debug("[RoutesService.updateOrCreate]", route);
     var options = {
@@ -309,6 +334,7 @@ angular.module('jumplink.cms.routes', [
     find: find,
     findOne: findOne,
     findByHost: findByHost,
+    exportByHost: exportByHost,
     updateOrCreate: updateOrCreate,
     updateOrCreateByHost: updateOrCreateByHost,
     updateOrCreateEach: updateOrCreateEach,

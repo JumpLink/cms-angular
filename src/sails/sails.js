@@ -53,7 +53,7 @@ angular.module('jumplink.cms.sails', [
       return deferred.promise;
     };
     return {
-      resolve: resolve
+      resolve: resolve,
     };
   })
 ;

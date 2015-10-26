@@ -391,7 +391,7 @@ angular.module('jumplink.cms.content', [
         name: name
       };
       var url = '/content/find';
-      if(type) {
+      if(angular.isDefined(type) && type !== null) {
         query.type = type;
       }
       return $sailsSocket.put(url, query).then (function (data) {
@@ -424,11 +424,12 @@ angular.module('jumplink.cms.content', [
         "Error: On trying to find all with page: "+page+" and type: "+type,
         "Warn: On trying to find all "+page+" contents! Not found, content is empty!"
       ];
-      var query = {
-        page: page,
-      };
+      var query = {};
       var url = '/content/findall';
-      if(type) {
+      if(angular.isDefined(page) && page !== null) {
+        query.page = page;
+      }
+      if(angular.isDefined(type) && type !== null) {
         query.type = type;
       }
       return $sailsSocket.put(url, query).then (function (data) {

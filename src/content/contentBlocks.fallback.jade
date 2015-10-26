@@ -1,0 +1,11 @@
+.row
+  if subnavigation
+    .col-md-2.hidden-xs.hidden-sm(ng-if="subnavigation")
+    //- TODO
+      jl-subnavigation(data-authenticated="authenticated", data-page="page", data-logger="logger", data-navs="navs", data-after-save="afterSaveNav", data-after-remove="afterRemoveNav", data-after-edit="afterEditNav", data-after-add="afterAddNav")
+  div(class= subnavigation ? "col-md-8" : "col-md-12")
+    each content in contents
+      .col-md-12
+        //- h2.anchor-static-navbar(id="#{content.name}")
+        h2.page-header #{content.title}
+        div!= content.content
