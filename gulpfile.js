@@ -18,21 +18,21 @@ var SOURCES = {
   TEMPLATES: './src/**/*.jade',
   APP: './src/**/*.js',
   STYLES: './jumplink-cms-angular.less',
-}
+};
 
 var WATCHES = {
   LIBS: SOURCES.LIBS,
   TEMPLATES: SOURCES.TEMPLATES,
   APP: SOURCES.APP,
   STYLES: './src/**/*.less'
-}
+};
 
 var DESTS = {
   LIBS: './dist',
   TEMPLATES: './dist',
   APP: './dist',
   STYLES: './dist'
-}
+};
 
 /**
  * Seperate watches to work with browser sync,
@@ -59,7 +59,7 @@ gulp.task('templates', function() {
   return gulp.src(SOURCES.TEMPLATES)
     .pipe(jade({locals: locals}).on('error', console.log))
     .pipe(debug({title: 'templates:'}))
-    .pipe(gulp.dest(DESTS.TEMPLATES))
+    .pipe(gulp.dest(DESTS.TEMPLATES));
 });
 
 gulp.task('app', function() {
@@ -83,5 +83,5 @@ gulp.task('styles', function () {
     }))
     .pipe(sourcemaps.write('/'))
     .pipe(debug({title: 'styles:'}))
-    .pipe(gulp.dest(DESTS.STYLES))
+    .pipe(gulp.dest(DESTS.STYLES));
 });

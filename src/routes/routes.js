@@ -3,6 +3,7 @@ angular.module('jumplink.cms.routes', [
   'jumplink.cms.sails',
   'jumplink.cms.sortable',
   'jumplink.cms.utilities',
+  'ngDownload'
 ])
 .provider('jlRoutes', function jlRoutesProvider($stateProvider, $urlRouterProvider, $locationProvider) {
 
