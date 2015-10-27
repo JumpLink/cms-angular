@@ -32,8 +32,8 @@
         .form-group
           label.control-label(ng-if="uploader.queue.length") Ausgewählte Bilder
           .media(ng-if="uploader.queue.length", ng-repeat="file in uploader.queue")
-            a.pull-left(href='#')
-              .img.media-object(ng-thumb="{ file: file._file, width: 100, height: 100 }")
+            //- a.pull-left(href='#')
+            //-   .img.media-object(ng-thumb="{ file: file._file, width: 100, height: 100 }")
             .media-body
               h4.media-heading
                 | {{file._file.name}}

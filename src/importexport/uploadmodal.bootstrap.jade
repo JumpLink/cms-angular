@@ -1,0 +1,24 @@
+.modal(tabindex='-1', role='dialog')
+  .modal-dialog
+    form.modal-content(role='form', name="blogPostform", novalidate)
+      .modal-header(ng-show='title')
+        button.close(type='button', ng-click='abort($hide)') ×
+        h4.modal-title(ng-bind='title')
+      .modal-body
+        jl-uploader(data-label="Choose JSON file to upload", data-label-files="Choosed JSON Files", data-upload-options="uploadOptions",  data-file-options="fileOptions", data-on-complete-item="onCompleteItem", data-on-complete-all="onCompleteAll")
+        hr
+        table.table.table-condensed
+          thead
+            tr
+              th Import
+              th Identifier
+              th Description
+          tbody
+            tr(ng-repeat="import in imports")
+              td: input(type="checkbox" ng-model="import.importOptions.doImport")
+              td {{import.importOptions.identifier}}
+              td {{import.importOptions.description}}
+      .modal-footer
+        .btn-group
+          button.btn.btn-danger(type='button', ng-click='abort($hide)') Abort
+          button.btn.btn-primary(type='submit', ng-click='import($hide);', ng-disabled="imports <= 0") Import

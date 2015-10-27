@@ -117,7 +117,7 @@ angular.module('jumplink.cms.bootstrap.blog', [
 
   var getModals = function() {
     return {
-      editModal: getTypeModal(),
+      editModal: getEditModal(),
       typeModal: getTypeModal()
     };
   };

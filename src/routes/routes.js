@@ -264,6 +264,9 @@ angular.module('jumplink.cms.routes', [
     });
   };
 
+  /**
+   * Update or create route (eg. position) for current host.
+   */
   var updateOrCreate = function(route, callback) {
     $log.debug("[RoutesService.updateOrCreate]", route);
     var options = {
@@ -273,6 +276,27 @@ angular.module('jumplink.cms.routes', [
     return JLSailsService.resolve('/Routes/updateOrCreate', {route: route}, options, callback);
   };
 
+  /**
+   * Update or create route for any passed host.
+   * Only for superadmins!
+   *
+   * @param req.param.host Host to save route for
+   */
+  var updateOrCreateByHostByObjectNameAndNavbar = function(host, route, callback) {
+    $log.debug("[RoutesService.updateOrCreateByHostByObjectNameAndNavbar]", host, route);
+    var options = {
+      method: 'post',
+      resultIsArray: false
+    };
+    return JLSailsService.resolve('/Routes/updateOrCreateByHostByObjectNameAndNavbar', {host: host, route: route}, options, callback);
+  };
+
+  /**
+   * Update or create route (eg. position) for any passed host.
+   * Only for superadmins!
+   *
+   * @param req.param.host Host to save route for
+   */
   var updateOrCreateByHost = function(host, route, callback) {
     $log.debug("[RoutesService.updateOrCreateByHost]", host, route);
     var options = {
@@ -282,6 +306,9 @@ angular.module('jumplink.cms.routes', [
     return JLSailsService.resolve('/Routes/updateOrCreateByHost', {host: host, route: route}, options, callback);
   };
 
+  /**
+   * Update or create each route (eg. position) for current host.
+   */
   var updateOrCreateEach = function(routes, callback) {
     $log.debug("[RoutesService.updateOrCreateEach]", routes);
     var options = {
@@ -291,6 +318,12 @@ angular.module('jumplink.cms.routes', [
     return JLSailsService.resolve('/Routes/updateOrCreateEach', {routes: routes}, options, callback);
   };
 
+  /**
+   * Update or create each route (eg. position) for any passed host.
+   * Only for superadmins!
+   *
+   * @param req.param.host Host to save route for
+   */
   var updateOrCreateEachByHost = function(host, routes, callback) {
     $log.debug("[RoutesService.updateOrCreateEachByHost]", host, routes);
     var options = {
@@ -336,6 +369,7 @@ angular.module('jumplink.cms.routes', [
     findByHost: findByHost,
     exportByHost: exportByHost,
     updateOrCreate: updateOrCreate,
+    updateOrCreateByHostByObjectNameAndNavbar: updateOrCreateByHostByObjectNameAndNavbar,
     updateOrCreateByHost: updateOrCreateByHost,
     updateOrCreateEach: updateOrCreateEach,
     updateOrCreateEachByHost: updateOrCreateEachByHost,

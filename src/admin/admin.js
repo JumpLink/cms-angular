@@ -8,6 +8,7 @@ angular.module('jumplink.cms.admin', [
       restrict: 'E',
       templateUrl: '/views/modern/adminbar.jade',
       scope: {
+        upload : "=?",
         download : "=?",
         toogleHtml: "=?",
         refresh: "=?",
