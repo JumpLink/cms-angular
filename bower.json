@@ -7,16 +7,18 @@
     "examples"
   ],
   "dependencies": {
-    "angular-strap": "~2.3.1"
+    "angular-strap": "~2.3.5",
+    "sails.io.js": "~0.11.7",
+    "angularSails": "~0.12.1"
   },
   "devDependencies": {
     "bootstrap": "~3.3.5",
     "angular-motion": "~0.4.3",
-    "medium-editor": "~5.8.3",
+    "medium-editor": "~5.10.0",
     "bootstrap-additions": "JumpLink/bootstrap-additions#master",
     "font-awesome": "~4.4.0",
     "Leaflet.label": "~0.2.1",
-    "leaflet": "~0.7.5",
+    "leaflet": "~0.7.7",
     "angular-toggle-switch": "angular-bootstrap-toggle-switch#~0.5.5"
   },
   "keywords": [
