@@ -1,6 +1,6 @@
 {
   "name": "jumplink-cms-angular",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "./dist/jumplink-cms-angular.min.js",
   "homepage": "https://github.com/JumpLink/cms-angular",
   "ignore": [
