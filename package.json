@@ -1,6 +1,6 @@
 {
   "name": "jumplink-cms-angular",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "The AngularJS Module for JumpLink CMS",
   "main": "js/app.js",
   "scripts": {
