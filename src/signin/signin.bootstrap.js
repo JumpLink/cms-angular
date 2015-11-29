@@ -54,10 +54,10 @@ angular.module('jumplink.cms.bootstrap.signin', [
         $log.debug("signin modal closed");
   /*    if(angular.isFunction(callback)) {
           callback(signinModal.$scope.error, signinModal.$scope.result, signinModal.$scope.user);
-        }             // verschoben nach signinModal.$scope.signin in SigninService.signin Callback
+        }             // verschoben nach oben, in den Callback von SigninService.signin, aufgerufen in signinModal.$scope.signin
                       //                
                       // - passiert sonst, dass 'modal.hide' auslöst, bevor SigninService.signin
-                      //   ein Ergebnis liefert. Dann ist signinModal.$scope.result===undefined     
+                      //   ein Ergebnis liefert. Dann ist signinModal.$scope.result noch undefined 
   */
       });
 
