@@ -23,4 +23,4 @@ angular.module('jumplink.cms.content.medium').directive('jlContent', function ($
       }
     }
   };
-})
+});
