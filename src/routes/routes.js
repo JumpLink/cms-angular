@@ -40,16 +40,12 @@ angular.module('jumplink.cms.routes', [
         if(routes[i].customstate === true) {
           // TODO Dirty hack!
           if(angular.isDefined(routes[i].state.resolve) && typeof(routes[i].state.resolve) === 'string' && routes[i].state.resolve.length > 0) {
-            /* jshint ignore:start */
-            eval(routes[i].state.resolve);
-            /* jshint ignore:end */
+            eval(routes[i].state.resolve); // jshint ignore:line
             options.resolve = resolve;
           }
           // TODO Dirty hack!
           if(angular.isDefined(routes[i].state.views) && typeof(routes[i].state.views) === 'string' && routes[i].state.views.length > 0) {
-            /* jshint ignore:start */
-            eval(routes[i].state.views);
-            /* jshint ignore:end */
+            eval(routes[i].state.views); // jshint ignore:line
             options.views = view;
           }
         // states wich are defined in routeOptions

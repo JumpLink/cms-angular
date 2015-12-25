@@ -6,7 +6,7 @@ angular.module('jumplink.cms.admin', [
 
     return {
       restrict: 'E',
-      templateUrl: '/views/modern/adminbar.jade',
+      templateUrl: '/views/modern/adminbar.bootstrap.jade',
       scope: {
         upload : "=?",
         download : "=?",
