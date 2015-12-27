@@ -62,12 +62,31 @@ var SOURCES = {
   LIBS_MATERIAL: [
 
   ],
+  APP_CORE: [
+    './src/**/*.js',
+    '!./src/**/*material*.js',
+    '!./src/**/*bootstrap*.js',
+  ],
+  APP_BOOTSTRAP: [
+    './src/**/*bootstrap*.js',
+  ],
+  APP_MATERIAL: [
+    './src/**/*material*.js',
+  ],
   TEMPLATES: [
     './src/**/*.jade',
     '!./src/**/*fallback*.jade',
   ],
-  APP: './src/**/*.js',
-  STYLES: './jumplink-cms-angular.less',
+  STYLES_CORE: [
+    './jumplink-cms-angular-core.less',
+  ],
+  STYLES_BOOTSTRAP: [
+    './jumplink-cms-angular-bootstrap.less',
+  ],
+  STYLES_MATERIAL: [
+    './jumplink-cms-angular-material.less',
+  ],
+  
 };
 
 var WATCHES = {
@@ -75,8 +94,8 @@ var WATCHES = {
   LIBS_BOOTSTRAP: SOURCES.LIBS_BOOTSTRAP,
   LIBS_MATERIAL: SOURCES.LIBS_MATERIAL,
   TEMPLATES: SOURCES.TEMPLATES,
-  APP: SOURCES.APP,
-  STYLES: './src/**/*.less'
+  APP: './src/**/*.js',
+  STYLES: './src/**/*.less',
 };
 
 var DESTS = {
@@ -118,13 +137,37 @@ gulp.task('app-watch', ['app']);
 /**
  * The default gulp task
  */
-gulp.task('default', ['templates', 'app', 'libs-bootstrap', 'styles'], function () {
+gulp.task('default', ['bootstrap', 'material'], function () {
   if(DEBUG) {
     gulp.watch(WATCHES.STYLES, ['styles']);
     gulp.watch(WATCHES.APP, ['app-watch']);
     gulp.watch(WATCHES.LIBS_CORE, ['libs-core-watch']);
     gulp.watch(WATCHES.LIBS_BOOTSTRAP, ['libs-bootstrap-watch']);
     gulp.watch(WATCHES.LIBS_MATERIAL, ['libs-material-watch']);
+    gulp.watch(WATCHES.TEMPLATES, ['jade-watch']);
+  }
+});
+
+/**
+ * 
+ */
+gulp.task('bootstrap', ['templates', 'app-bootstrap', 'libs-bootstrap', 'styles-bootstrap'], function () {
+  if(DEBUG) {
+    gulp.watch(WATCHES.STYLES, ['styles']);
+    gulp.watch(WATCHES.APP, ['app-watch']);
+    gulp.watch(WATCHES.LIBS_BOOTSTRAP, ['libs-bootstrap-watch']);
+    gulp.watch(WATCHES.TEMPLATES, ['jade-watch']);
+  }
+});
+
+/**
+ * 
+ */
+gulp.task('material', ['templates', 'app-material', 'libs-material', 'styles-material'], function () {
+  if(DEBUG) {
+    gulp.watch(WATCHES.STYLES, ['styles']);
+    gulp.watch(WATCHES.APP, ['app-watch']);
+    gulp.watch(WATCHES.LIBS_BOOTSTRAP, ['libs-bootstrap-watch']);
     gulp.watch(WATCHES.TEMPLATES, ['jade-watch']);
   }
 });
@@ -176,26 +219,74 @@ gulp.task('libs-material', function() {
     .pipe(gulp.dest(DESTS.LIBS_MATERIAL));
 });
 
-gulp.task('app', function() {
-  return gulp.src(SOURCES.APP)
+gulp.task('app-core', function() {
+  return gulp.src(SOURCES.APP_CORE)
     .pipe(sourcemaps.init())
     .pipe(ngAnnotate())
     .pipe(jshint())
     .pipe(jshint.reporter('default')) 
-    .pipe(concat('jumplink-cms-angular.js'))
+    .pipe(concat('jumplink-cms-angular-core.js'))
     .pipe(uglify())
     .pipe(sourcemaps.write('/'))
-    .pipe(debug({title: 'app:'}))
+    .pipe(debug({title: 'app-core:'}))
     .pipe(gulp.dest(DESTS.APP));
 });
 
-gulp.task('styles', function () {
-  return gulp.src(SOURCES.STYLES)
+gulp.task('app-bootstrap', function() {
+  return gulp.src(SOURCES.APP_CORE, SOURCES.APP_BOOTSTRAP)
+    .pipe(sourcemaps.init())
+    .pipe(ngAnnotate())
+    .pipe(jshint())
+    .pipe(jshint.reporter('default')) 
+    .pipe(concat('jumplink-cms-angular-bootstrap.js'))
+    .pipe(uglify())
+    .pipe(sourcemaps.write('/'))
+    .pipe(debug({title: 'app-bootstrap:'}))
+    .pipe(gulp.dest(DESTS.APP));
+});
+
+gulp.task('app-material', function() {
+  return gulp.src(SOURCES.APP_CORE, SOURCES.APP_MATERIAL)
+    .pipe(sourcemaps.init())
+    .pipe(ngAnnotate())
+    .pipe(jshint())
+    .pipe(jshint.reporter('default')) 
+    .pipe(concat('jumplink-cms-angular-material.js'))
+    .pipe(uglify())
+    .pipe(sourcemaps.write('/'))
+    .pipe(debug({title: 'app-material:'}))
+    .pipe(gulp.dest(DESTS.APP));
+});
+
+gulp.task('styles-core', function () {
+  return gulp.src(SOURCES.STYLES_CORE)
     .pipe(sourcemaps.init())
     .pipe(less({
       plugins: [autoprefix, cleancss]
     }))
     .pipe(sourcemaps.write('/'))
-    .pipe(debug({title: 'styles:'}))
+    .pipe(debug({title: 'styles-core:'}))
+    .pipe(gulp.dest(DESTS.STYLES));
+});
+
+gulp.task('styles-bootstrap', function () {
+  return gulp.src(SOURCES.STYLES_BOOTSTRAP)
+    .pipe(sourcemaps.init())
+    .pipe(less({
+      plugins: [autoprefix, cleancss]
+    }))
+    .pipe(sourcemaps.write('/'))
+    .pipe(debug({title: 'styles-bootstrap:'}))
+    .pipe(gulp.dest(DESTS.STYLES));
+});
+
+gulp.task('styles-material', function () {
+  return gulp.src(SOURCES.STYLES_MATERIAL)
+    .pipe(sourcemaps.init())
+    .pipe(less({
+      plugins: [autoprefix, cleancss]
+    }))
+    .pipe(sourcemaps.write('/'))
+    .pipe(debug({title: 'styles-material:'}))
     .pipe(gulp.dest(DESTS.STYLES));
 });
