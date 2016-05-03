@@ -119,7 +119,7 @@ angular.module('jumplink.cms.subnavigation', [
         }
       }).
       error(function(data, status, headers, config) {
-        $log.error (errors[0], data);
+        //$log.error (errors[0], data);
         if(angular.isFunction(cb)) {
           return cb(data);
         }
